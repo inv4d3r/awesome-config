@@ -8,11 +8,10 @@ theme.font = "Gros 6"
 themedir = "~/.config/awesome/themes"
 
 --// Wallpaper
-theme.wallpaper = "~/.config/awesome/arch_green.png"
+theme.wallpaper = "~/.config/awesome/arch_min_gray.jpg"
 
 --// Custom icons
 theme.volume_icon = "~/.config/awesome/icons/gray/volume.png"
-theme.mpd_icon = "~/.config/awesome/icons/gray/mpd.png"
 theme.netdown_icon = "~/.config/awesome/icons/gray/netdown.png"
 theme.netup_icon = "~/.config/awesome/icons/gray/netup.png"
 theme.inbox_icon = "~/.config/awesome/icons/gray/mail.png"

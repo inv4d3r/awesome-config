@@ -44,6 +44,13 @@ end
 -- }}}
 
 -- My definitions
+local function debug(debug_string)
+  naughty.notify({ preset = naughty.config.presets.normal,
+                   title = "-- DEBUG --",
+                   text = debug_string,
+                   timeout = 5 })
+end
+
 local io = { popen = io.popen }
 
 local function getIP(interface)
@@ -60,8 +67,8 @@ end
 
 local function displaytransfer_rate(rate_kb)
   rate = tonumber(rate_kb)
-  if rate > 1000 then return rate/1000 .. " mb"
-  else return rate_kb .. " kb" end
+  if rate > 1000 then return string.format("%.1f", rate/1000) .. " mb"
+  else return string.format("%.1f", rate_kb) .. " kb" end
 end
 
 local function colorify(text, color)
@@ -136,7 +143,7 @@ end
 -- Define a tag table which hold all screen tags.
 tags = {}
 tagnames = {" web ", " im ", " music ", " work ", " system ", " porn ", " raspberry ", nil }
-mylayouts = { layouts[1], layouts[2], layouts[8], layouts[2], layouts[2], layouts[12], layouts[2] }
+mylayouts = { layouts[1], layouts[2], layouts[8], layouts[2], layouts[2], layouts[1], layouts[2] }
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
     tags[s] = awful.tag(tagnames, s, mylayouts)
@@ -157,7 +164,6 @@ for s = 1, screen.count() do
   --awful.tag.seticon(configdir .. "icons/gray/gear.png", tags[s][5])
   --awful.tag.seticon(configdir .. "icons/gray/porn.png", tags[s][6])
   --awful.tag.seticon(configdir .. "icons/gray/rbpi.png", tags[s][7])
---    awful.tag.seticon("/home/invader/rbpi_light.png", tags[s][6])
 end
 -- }}}
 
@@ -209,12 +215,14 @@ for s = 1, screen.count() do
       end, 120)
     mail_icon = wibox.widget.imagebox()
     mail_icon:set_image(beautiful.inbox_icon)
-
+    
+    no_bat = false
     -- Create battery widget
     bat_widget = wibox.widget.textbox()
     vicious.register(bat_widget, vicious.widgets.bat,
       function(widget, args)
-        if args[3] == "N/A" then
+        if args[2] == 0 then
+          no_bat = true
           return ""
         else
           return " " .. args[2] .. "% "
@@ -228,8 +236,6 @@ for s = 1, screen.count() do
     netdown_icon:set_image(beautiful.netdown_icon)
     netup_icon = wibox.widget.imagebox()
     netup_icon:set_image(beautiful.netup_icon)
-    --wifi_info = wibox.widget.textbox()
-    --wifi_info:set_markup("wlan0" .. colorify(" [ ", beautiful.fg_green) .. getIP("wlan0") .. colorify(" ] ", beautiful.fg_green))
     wifitransfer_info = wibox.widget.textbox()
     if getIP("wlan0") ~= "no address" then
       vicious.register(wifitransfer_info, vicious.widgets.net, 
@@ -271,8 +277,6 @@ for s = 1, screen.count() do
       end
 
     end, 1)
-    mpd_icon = wibox.widget.imagebox()
-    mpd_icon:set_image(beautiful.mpd_icon)
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -290,13 +294,12 @@ for s = 1, screen.count() do
     right_layout:add(mail_icon)
     right_layout:add(mail_widget)
     right_layout:add(spacer)
-    right_layout:add(mpd_icon)
     right_layout:add(mpd_widget)
     right_layout:add(spacer)
     right_layout:add(volume_icon)
     right_layout:add(volume_widget)
     right_layout:add(spacer)
-    if bat_widget.text ~= nil then
+    if not no_bat then
       right_layout:add(bat_icon)
       right_layout:add(bat_widget)
       right_layout:add(spacer)
@@ -375,6 +378,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
+    awful.key({ modkey, "Control" }, "l",     function () awful.util.spawn("slimlock")    end),
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)    end),
     awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)    end),
     awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1)      end),

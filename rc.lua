@@ -3,7 +3,6 @@
 --                by Invader                  --
 ------------------------------------------------
 
-
 -- Standard awesome library
 local vicious = require("vicious")
 local gears = require("gears")
@@ -16,7 +15,6 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
-local menubar = require("menubar")
 gears.wallpaper.centered(beautiful.wallpaper, nil, "")
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -52,7 +50,7 @@ local function debug(debug_string)
 end
 
 local io = { popen = io.popen }
-
+local touchpad = 0
 local function getIP(interface)
     if not interface then return end
     local f = io.popen("ip addr list "..interface .. " |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
@@ -77,7 +75,7 @@ end
 
 -- set the desired pixel coordinates:
 --  if your screen is 1024x768 the this line sets the bottom right.
-local safeCoords = {x=1280, y=800}
+local safeCoords = {x=0, y=800}
 -- Flag to tell Awesome whether to do this at startup.
 local moveMouseOnStartup = true
 
@@ -97,6 +95,7 @@ end
 -- {{{ Variable definitions
 -- Custom useful vars
 configdir = "/home/invader/.config/awesome/"
+black_n_white = false
 
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/home/invader/.config/awesome/theme.lua")
@@ -132,13 +131,31 @@ local layouts =
 -- }}}
 
 -- {{{ Wallpaper
-if beautiful.wallpaper then
-    for s = 1, screen.count() do
-        gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+gears.wallpaper.maximized(beautiful.wallpaper, nil, true)
+-- }}}
+local function load_tagicons()
+     if black_n_white then 
+      for s = 1, screen.count() do
+        awful.tag.seticon(configdir .. "icons/gray/firefox.png", tags[s][1])
+        awful.tag.seticon(configdir .. "icons/gray/IM.png", tags[s][2])
+        awful.tag.seticon(configdir .. "icons/gray/music.png", tags[s][3])
+        awful.tag.seticon(configdir .. "icons/gray/code.png", tags[s][4])
+        awful.tag.seticon(configdir .. "icons/gray/gear.png", tags[s][5])
+        awful.tag.seticon(configdir .. "icons/gray/porn.png", tags[s][6])
+        awful.tag.seticon(configdir .. "icons/gray/rbpi.png", tags[s][7])
+      end
+    else
+      for s = 1, screen.count() do
+        awful.tag.seticon(configdir .. "icons/color/firefox.png", tags[s][1])
+        awful.tag.seticon(configdir .. "icons/color/IM.png", tags[s][2])
+        awful.tag.seticon(configdir .. "icons/color/music.png", tags[s][3])
+        awful.tag.seticon(configdir .. "icons/color/code.png", tags[s][4])
+        awful.tag.seticon(configdir .. "icons/color/gear.png", tags[s][5])
+        awful.tag.seticon(configdir .. "icons/color/porn.png", tags[s][6])
+        awful.tag.seticon(configdir .. "icons/color/rbpi.png", tags[s][7])
+      end
     end
 end
--- }}}
-
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {}
@@ -147,24 +164,9 @@ mylayouts = { layouts[1], layouts[2], layouts[8], layouts[2], layouts[2], layout
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
     tags[s] = awful.tag(tagnames, s, mylayouts)
-    
     -- Tag icons
-    awful.tag.seticon(configdir .. "icons/color/firefox.png", tags[s][1])
-    awful.tag.seticon(configdir .. "icons/color/IM.png", tags[s][2])
-    awful.tag.seticon(configdir .. "icons/color/music.png", tags[s][3])
-    awful.tag.seticon(configdir .. "icons/color/code.png", tags[s][4])
-    awful.tag.seticon(configdir .. "icons/color/gear.png", tags[s][5])
-    awful.tag.seticon(configdir .. "icons/color/porn.png", tags[s][6])
-    awful.tag.seticon(configdir .. "icons/color/rbpi.png", tags[s][7])
-    
-  --awful.tag.seticon(configdir .. "icons/gray/firefox.png", tags[s][1])
-  --awful.tag.seticon(configdir .. "icons/gray/IM.png", tags[s][2])
-  --awful.tag.seticon(configdir .. "icons/gray/music.png", tags[s][3])
-  --awful.tag.seticon(configdir .. "icons/gray/code.png", tags[s][4])
-  --awful.tag.seticon(configdir .. "icons/gray/gear.png", tags[s][5])
-  --awful.tag.seticon(configdir .. "icons/gray/porn.png", tags[s][6])
-  --awful.tag.seticon(configdir .. "icons/gray/rbpi.png", tags[s][7])
 end
+load_tagicons(s)
 -- }}}
 
 -- {{{ Wibox
@@ -197,6 +199,8 @@ for s = 1, screen.count() do
     -- Create spacer widget
     spacer = wibox.widget.textbox()
     spacer:set_markup(colorify(" | ", beautiful.fg_green))
+    spacer_gray = wibox.widget.textbox()
+    spacer_gray:set_markup(colorify(" | ", beautiful.fg_lightgray))
 
     -- Create volume widget
     volume_widget = wibox.widget.textbox()
@@ -205,8 +209,20 @@ for s = 1, screen.count() do
     volume_icon:set_image(beautiful.volume_icon)
 
     -- Create the top wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 2 })
+    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_darkgray })
+    -- mywibox[s]:set_bg(theme.fg_white)
     
+    -- Hard drives usage widgets
+    windrive_icon = wibox.widget.imagebox()
+    windrive_icon:set_image(beautiful.windows_icon)
+    windrive_widget = wibox.widget.textbox()
+    vicious.register(windrive_widget, vicious.widgets.fs, " ${/mnt/windows avail_gb} GB free ", 10)
+
+    homedrive_icon = wibox.widget.imagebox()
+    homedrive_icon:set_image(beautiful.tux_icon)
+    homedrive_widget = wibox.widget.textbox()
+    vicious.register(homedrive_widget, vicious.widgets.fs, " ${/ avail_gb} GB free ", 10)
+
     -- Create mail widget
     mail_widget = wibox.widget.textbox()
     vicious.register(mail_widget, vicious.widgets.gmail, 
@@ -281,7 +297,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mytaglist[s])
-    left_layout:add(spacer)
+    left_layout:add(spacer_gray)
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
@@ -291,10 +307,16 @@ for s = 1, screen.count() do
     right_layout:add(wifitransfer_info)
     right_layout:add(netup_icon)
     right_layout:add(spacer)
+    right_layout:add(homedrive_icon)
+    right_layout:add(homedrive_widget)
+    right_layout:add(spacer)
+    right_layout:add(windrive_icon)
+    right_layout:add(windrive_widget)
+    right_layout:add(spacer)
     right_layout:add(mail_icon)
     right_layout:add(mail_widget)
-    right_layout:add(spacer)
-    right_layout:add(mpd_widget)
+    --right_layout:add(spacer)
+    --right_layout:add(mpd_widget)
     right_layout:add(spacer)
     right_layout:add(volume_icon)
     right_layout:add(volume_widget)
@@ -349,7 +371,6 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
@@ -365,13 +386,17 @@ globalkeys = awful.util.table.join(
             end
         end),
     -- Custom keys
-    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 2+") end),
-    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 2-") end),
+    awful.key({ modkey, "Control" }, "t", function () awful.util.spawn("synclient TouchpadOff=" .. touchpad) if(touchpad == 0) then touchpad = 1 else touchpad = 0 end debug(touchpad) end),
+    awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 10%+") end),
+    awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 10%-") end),
     awful.key({}, "XF86AudioPlay", function () awful.util.spawn("ncmpcpp toggle") end),
     awful.key({}, "XF86AudioStop", function () awful.util.spawn("ncmpcpp stop") end),
     awful.key({}, "XF86AudioNext", function () awful.util.spawn("ncmpcpp next") end),
     awful.key({}, "XF86AudioPrev", function () awful.util.spawn("ncmpcpp prev") end),
     awful.key({}, "Print", function () awful.util.spawn("shutter --select") end),
+    awful.key({ modkey }, "b", function() black_n_white = not black_n_white load_tagicons() end),
+    awful.key({ modkey, "Mod1" }, "Left", function() awful.util.spawn("ncmpcpp volume -5") end),
+    awful.key({ modkey, "Mod1" }, "Right", function() awful.util.spawn("ncmpcpp volume +5") end),
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
@@ -399,10 +424,7 @@ globalkeys = awful.util.table.join(
                   mypromptbox[mouse.screen].widget,
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
-              end),
-
-    -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+              end)
 )
 
 clientkeys = awful.util.table.join(
@@ -503,7 +525,7 @@ awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
       properties = { border_width = 0,
-                     border_color = beautiful.fg_green,
+                     border_color = beautiful.fg_darkgray,
                      focus = awful.client.focus.filter,
                      size_hints_honor = false,
                      keys = clientkeys,
@@ -511,7 +533,7 @@ awful.rules.rules = {
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "URxvt" },
-      properties = { border_width = 0 } },    
+      properties = { border_width = 1 } },    
     { rule = { class = "pinentry" },
       properties = { floating = true } },
     { rule = { class = "gimp" },
@@ -546,6 +568,6 @@ client.connect_signal("manage", function (c, startup)
     end
 end)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus", function(c) c.border_color = beautiful.fg_darkgray end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.fg_black end)
 -- }}}

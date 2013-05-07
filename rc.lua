@@ -15,7 +15,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
-gears.wallpaper.centered(beautiful.wallpaper, nil, "")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -41,7 +41,8 @@ do
 end
 -- }}}
 
--- My definitions
+-- {{ My definitions
+-- Widget utils
 local function debug(debug_string)
   naughty.notify({ preset = naughty.config.presets.normal,
                    title = "-- DEBUG --",
@@ -49,8 +50,38 @@ local function debug(debug_string)
                    timeout = 5 })
 end
 
+local function colorify(text, color)
+  return "<span color='" .. color .. "'>" .. text .. "</span>"
+end
+
+local function load_tagicons()
+    for s = 1, screen.count() do
+      awful.tag.seticon(configdir .. "icons/color/firefox.png", tags[s][1])
+      awful.tag.seticon(configdir .. "icons/color/IM.png", tags[s][2])
+      awful.tag.seticon(configdir .. "icons/color/music.png", tags[s][3])
+      awful.tag.seticon(configdir .. "icons/color/code.png", tags[s][4])
+      awful.tag.seticon(configdir .. "icons/color/gear.png", tags[s][5])
+      awful.tag.seticon(configdir .. "icons/color/porn.png", tags[s][6])
+      awful.tag.seticon(configdir .. "icons/color/rbpi.png", tags[s][7])
+    end
+end
+
+local function load_widgeticons()
+  volume_icon:set_image(beautiful.volume_icon)
+  windrive_icon:set_image(beautiful.windows_icon)
+  homedrive_icon:set_image(beautiful.tux_icon)
+  mail_icon:set_image(beautiful.inbox_icon)
+  bat_icon:set_image(beautiful.bat_icon)
+  netdown_icon:set_image(beautiful.netdown_icon)
+  netup_icon:set_image(beautiful.netup_icon)
+
+  --mywibox[1]:set_bg(beautiful.bg_normal)
+  --mywibox[1]:set_fg(beautiful.fg_normal)
+  mystatusbar[1]:set_bg(beautiful.fg_nearblack)
+  spacer:set_markup(colorify(" | ", beautiful.fg_lightgray))
+end
+
 local io = { popen = io.popen }
-local touchpad = 0
 local function getIP(interface)
     if not interface then return end
     local f = io.popen("ip addr list "..interface .. " |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
@@ -62,40 +93,24 @@ local function getIP(interface)
       return 'no address'
     end
 end
-
 local function displaytransfer_rate(rate_kb)
   rate = tonumber(rate_kb)
   if rate > 1000 then return string.format("%.1f", rate/1000) .. " mb"
   else return string.format("%.1f", rate_kb) .. " kb" end
 end
 
-local function colorify(text, color)
-  return "<span color='" .. color .. "'>" .. text .. "</span>"
-end
-
--- set the desired pixel coordinates:
---  if your screen is 1024x768 the this line sets the bottom right.
+-- Mouse handling
 local safeCoords = {x=0, y=800}
--- Flag to tell Awesome whether to do this at startup.
 local moveMouseOnStartup = true
-
--- Simple function to move the mouse to the coordinates set above.
 local function moveMouse(x_co, y_co)
     mouse.coords({ x=x_co, y=y_co })
 end
-
--- Bind ''Meta4+Ctrl+m'' to move the mouse to the coordinates set above.
---   this is useful if you needed the mouse for something and now want it out of the way
-
--- Optionally move the mouse when rc.lua is read (startup)
 if moveMouseOnStartup then
         moveMouse(safeCoords.x, safeCoords.y)
 end
 
 -- {{{ Variable definitions
--- Custom useful vars
 configdir = "/home/invader/.config/awesome/"
-black_n_white = false
 
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/home/invader/.config/awesome/theme.lua")
@@ -106,10 +121,6 @@ editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
 modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
@@ -124,47 +135,25 @@ local layouts =
     awful.layout.suit.fair.horizontal,
     awful.layout.suit.spiral,
     awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    awful.layout.suit.max.fullscreen,
-    awful.layout.suit.magnifier
+    --awful.layout.suit.max,
+    --awful.layout.suit.max.fullscreen,
+    --awful.layout.suit.magnifier
 }
 -- }}}
 
 -- {{{ Wallpaper
 gears.wallpaper.maximized(beautiful.wallpaper, nil, true)
+--gears.wallpaper.centered(beautiful.wallpaper, nil, "")
 -- }}}
-local function load_tagicons()
-     if black_n_white then 
-      for s = 1, screen.count() do
-        awful.tag.seticon(configdir .. "icons/gray/firefox.png", tags[s][1])
-        awful.tag.seticon(configdir .. "icons/gray/IM.png", tags[s][2])
-        awful.tag.seticon(configdir .. "icons/gray/music.png", tags[s][3])
-        awful.tag.seticon(configdir .. "icons/gray/code.png", tags[s][4])
-        awful.tag.seticon(configdir .. "icons/gray/gear.png", tags[s][5])
-        awful.tag.seticon(configdir .. "icons/gray/porn.png", tags[s][6])
-        awful.tag.seticon(configdir .. "icons/gray/rbpi.png", tags[s][7])
-      end
-    else
-      for s = 1, screen.count() do
-        awful.tag.seticon(configdir .. "icons/color/firefox.png", tags[s][1])
-        awful.tag.seticon(configdir .. "icons/color/IM.png", tags[s][2])
-        awful.tag.seticon(configdir .. "icons/color/music.png", tags[s][3])
-        awful.tag.seticon(configdir .. "icons/color/code.png", tags[s][4])
-        awful.tag.seticon(configdir .. "icons/color/gear.png", tags[s][5])
-        awful.tag.seticon(configdir .. "icons/color/porn.png", tags[s][6])
-        awful.tag.seticon(configdir .. "icons/color/rbpi.png", tags[s][7])
-      end
-    end
-end
+
+
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
 tags = {}
 tagnames = {" web ", " im ", " music ", " work ", " system ", " porn ", " raspberry ", nil }
 mylayouts = { layouts[1], layouts[2], layouts[8], layouts[2], layouts[2], layouts[1], layouts[2] }
 for s = 1, screen.count() do
-    -- Each screen has its own tag table.
     tags[s] = awful.tag(tagnames, s, mylayouts)
-    -- Tag icons
 end
 load_tagicons(s)
 -- }}}
@@ -181,10 +170,8 @@ mytaglist = {}
 mytasklist = {}
 mystatusbar = {}
 for s = 1, screen.count() do
-
     -- Create a promptbox for each screen
     mypromptbox[s] = awful.widget.prompt()
-
     -- Create a layoutbox
     mylayoutbox[s] = awful.widget.layoutbox(s)
     mylayoutbox[s]:buttons(awful.util.table.join(
@@ -192,34 +179,22 @@ for s = 1, screen.count() do
                            awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
                            awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
-
     -- Create a taglist widget
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
-
     -- Create spacer widget
     spacer = wibox.widget.textbox()
-    spacer:set_markup(colorify(" | ", beautiful.fg_green))
-    spacer_gray = wibox.widget.textbox()
-    spacer_gray:set_markup(colorify(" | ", beautiful.fg_lightgray))
-
     -- Create volume widget
     volume_widget = wibox.widget.textbox()
     vicious.register(volume_widget, vicious.widgets.volume, " $1% ", 1, "Master")
     volume_icon = wibox.widget.imagebox()
-    volume_icon:set_image(beautiful.volume_icon)
-
     -- Create the top wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_darkgray })
-    -- mywibox[s]:set_bg(theme.fg_white)
-    
+    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_nearblack })
     -- Hard drives usage widgets
     windrive_icon = wibox.widget.imagebox()
-    windrive_icon:set_image(beautiful.windows_icon)
     windrive_widget = wibox.widget.textbox()
     vicious.register(windrive_widget, vicious.widgets.fs, " ${/mnt/windows avail_gb} GB free ", 10)
 
     homedrive_icon = wibox.widget.imagebox()
-    homedrive_icon:set_image(beautiful.tux_icon)
     homedrive_widget = wibox.widget.textbox()
     vicious.register(homedrive_widget, vicious.widgets.fs, " ${/ avail_gb} GB free ", 10)
 
@@ -230,7 +205,6 @@ for s = 1, screen.count() do
         return " " .. args["{count}"] .. " "
       end, 120)
     mail_icon = wibox.widget.imagebox()
-    mail_icon:set_image(beautiful.inbox_icon)
     
     no_bat = false
     -- Create battery widget
@@ -245,13 +219,10 @@ for s = 1, screen.count() do
         end
       end, 60, "BAT0")
     bat_icon = wibox.widget.imagebox()
-    bat_icon:set_image(beautiful.bat_icon)
 
     -- Create a net widget
     netdown_icon = wibox.widget.imagebox()
-    netdown_icon:set_image(beautiful.netdown_icon)
     netup_icon = wibox.widget.imagebox()
-    netup_icon:set_image(beautiful.netup_icon)
     wifitransfer_info = wibox.widget.textbox()
     if getIP("wlan0") ~= "no address" then
       vicious.register(wifitransfer_info, vicious.widgets.net, 
@@ -297,7 +268,7 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mytaglist[s])
-    left_layout:add(spacer_gray)
+    left_layout:add(spacer)
     left_layout:add(mypromptbox[s])
 
     -- Widgets that are aligned to the right
@@ -338,10 +309,13 @@ for s = 1, screen.count() do
         
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags)
+
     bottom_left_layout = wibox.layout.fixed.horizontal()
-    
     bottom_right_layout = wibox.layout.fixed.horizontal()
-    if s == 1 then bottom_right_layout:add(wibox.widget.systray()) end
+    
+    -- Systray widget
+    systray = wibox.widget.systray()
+    if s == 1 then bottom_right_layout:add(systray) end
 
     local bottom_layout = wibox.layout.align.horizontal()
     bottom_layout:set_left(bottom_left_layout)
@@ -354,6 +328,8 @@ for s = 1, screen.count() do
 
 end
 -- }}}
+
+load_widgeticons()
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
@@ -386,7 +362,6 @@ globalkeys = awful.util.table.join(
             end
         end),
     -- Custom keys
-    awful.key({ modkey, "Control" }, "t", function () awful.util.spawn("synclient TouchpadOff=" .. touchpad) if(touchpad == 0) then touchpad = 1 else touchpad = 0 end debug(touchpad) end),
     awful.key({}, "XF86AudioRaiseVolume", function () awful.util.spawn("amixer set Master 10%+") end),
     awful.key({}, "XF86AudioLowerVolume", function () awful.util.spawn("amixer set Master 10%-") end),
     awful.key({}, "XF86AudioPlay", function () awful.util.spawn("ncmpcpp toggle") end),
@@ -394,7 +369,6 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioNext", function () awful.util.spawn("ncmpcpp next") end),
     awful.key({}, "XF86AudioPrev", function () awful.util.spawn("ncmpcpp prev") end),
     awful.key({}, "Print", function () awful.util.spawn("shutter --select") end),
-    awful.key({ modkey }, "b", function() black_n_white = not black_n_white load_tagicons() end),
     awful.key({ modkey, "Mod1" }, "Left", function() awful.util.spawn("ncmpcpp volume -5") end),
     awful.key({ modkey, "Mod1" }, "Right", function() awful.util.spawn("ncmpcpp volume +5") end),
 
@@ -522,25 +496,41 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 awful.rules.rules = {
-    -- All clients will match this rule.
-    { rule = { },
-      properties = { border_width = 0,
-                     border_color = beautiful.fg_darkgray,
-                     focus = awful.client.focus.filter,
-                     size_hints_honor = false,
-                     keys = clientkeys,
-                     buttons = clientbuttons } },
-    { rule = { class = "MPlayer" },
-      properties = { floating = true } },
-    { rule = { class = "URxvt" },
-      properties = { border_width = 1 } },    
-    { rule = { class = "pinentry" },
-      properties = { floating = true } },
-    { rule = { class = "gimp" },
-      properties = { floating = true } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+  
+   -- All clients will match this rule.
+   { rule = { },
+     properties = { border_width = 0,
+                    border_color = beautiful.fg_darkgray,
+                    focus = awful.client.focus.filter,
+                    size_hints_honor = false,
+                    keys = clientkeys,
+                    buttons = clientbuttons } },
+   { rule = { class = "MPlayer" },
+     properties = { floating = true } },
+   { rule = { class = "URxvt" },
+     properties = { border_width = 1 } },    
+   { rule = { class = "pinentry" },
+     properties = { floating = true } },
+   { rule = { class = "Gimp" },
+       properties = { tag = tags[1][6] } },
+   { rule = { class = "Firefox" },
+     properties = { tag = tags[1][1] } },
+   { rule = { class = "luakit" },
+     properties = { tag = tags[1][1] } },
+   { rule = { class = "Deluge" },
+     properties = { tag = tags[1][6] } },
+   { rule = { class = "Filezilla" },
+     properties = { tag = tags[1][7] } },
+   { rule = { class = "Spotify" },
+     properties = { tag = tags[1][3] } },
+   { rule = { class = "Skype" },
+     properties = { tag = tags[1][2] } },
+   { rule = { class = "libreoffice-startcenter" },
+     properties = { tag = tags[1][4] } },
+   { rule = { class = "jetbrains-idea-ce" },
+     properties = { tag = tags[1][4] } },
+   { rule = { class = "MonoDevelop" },
+     properties = { tag = tags[1][4] } },
 }
 -- }}}
 
@@ -568,6 +558,6 @@ client.connect_signal("manage", function (c, startup)
     end
 end)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.fg_darkgray end)
+client.connect_signal("focus", function(c) c.border_color = beautiful.fg_nearblack end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.fg_black end)
 -- }}}

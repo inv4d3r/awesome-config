@@ -11,13 +11,28 @@ themedir = "~/.config/awesome/themes"
 theme.wallpaper = "~/.config/awesome/walls/archsome_min_gray.jpg"
 
 --// Custom icons
-theme.volume_icon = "~/.config/awesome/icons/color/volume.png"
+-- Left layout
+theme.web = "~/.config/awesome/icons/color/cloud.png"
+theme.mail = "~/.config/awesome/icons/color/email_icon.png"
+theme.im = "~/.config/awesome/icons/color/community.png"
+theme.music = "~/.config/awesome/icons/color/music.png"
+theme.devel = "~/.config/awesome/icons/color/hammer.png"
+theme.system = "~/.config/awesome/icons/color/gear.png"
+theme.porn = "~/.config/awesome/icons/color/porn.png"
+theme.misc = "~/.config/awesome/icons/color/rbpi.png"
+
+-- Right layout
+theme.volume_low_icon = "~/.config/awesome/icons/color/volume_low.png"
+theme.volume_mid_icon = "~/.config/awesome/icons/color/volume_mid.png"
+theme.volume_high_icon = "~/.config/awesome/icons/color/volume_high.png"
 theme.netdown_icon = "~/.config/awesome/icons/color/netdown.png"
 theme.netup_icon = "~/.config/awesome/icons/color/netup.png"
-theme.inbox_icon = "~/.config/awesome/icons/color/mail.png"
+theme.mail_opened_icon = "~/.config/awesome/icons/color/mail_opened.png"
+theme.mail_closed_icon = "~/.config/awesome/icons/color/mail_closed.png"
 theme.bat_icon = "~/.config/awesome/icons/color/bat.png"
 theme.windows_icon = "~/.config/awesome/icons/color/windows.png"
 theme.tux_icon = "~/.config/awesome/icons/color/tux.png"
+theme.home_icon = "~/.config/awesome/icons/color/home.png"
 
 --// Custom Colors
 theme.fg_green = "#80a673"
@@ -26,16 +41,21 @@ theme.fg_black = "#111111"
 theme.fg_nearblack = "#222222"
 theme.fg_darkgray = "#444444"
 theme.fg_lightgray = "#888888"
+theme.fg_solarized = "#2D7067"
+theme.fg_jellybean_green = "#99ad6a" 
+theme.fg_jellybean_orange = "#ff9500"
+theme.fg_red = "#a90000"
+theme.fg_highlight = theme.fg_jellybean_green
 
 --// Default Colors
 theme.bg_normal = theme.fg_nearblack
 theme.bg_focus  = theme.fg_black
-theme.bg_urgent = "#ffc0c0"
+theme.bg_urgent = theme.fg_jellybean_orange
 theme.bg_minimize   = "#444444"
 theme.bg_systray    = theme.bg_normal
 
 theme.fg_normal = "#808080"
-theme.fg_focus  = theme.fg_white
+theme.fg_focus  = theme.fg_jellybean_green
 theme.fg_urgent = "#000000"
 theme.fg_minimize   = "#ffffff"
 
@@ -68,6 +88,7 @@ theme.layout_max        = "/home/invader/.config/awesome/themes/layouts/max.png"
 theme.layout_fullscreen = "/home/invader/.config/awesome/themes/layouts/fullscreen.png"
 theme.layout_magnifier  = "/home/invader/.config/awesome/themes/layouts/magnifier.png"
 theme.layout_floating   = "/home/invader/.config/awesome/themes/layouts/floating.png"
+theme.layout_treesome   = "/home/invader/.config/awesome/themes/layouts/treesome.png"
 
 theme.icon_theme = nil
 

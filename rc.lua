@@ -65,7 +65,20 @@ local function colorify(text, color)
 end
 
 local io = { popen = io.popen }
-local function getIP(interface)
+local function get_interfaces()
+  local f = io.popen("ip l | awk 'NR%2==1 {print substr($2, 0, length($2)-1)}'")
+  local ifaces = {}
+  local fline = f:read("*line")
+  while fline do
+    if fline ~= "lo" then
+      table.insert(ifaces, fline)
+    end
+    fline = f:read("*line")
+  end
+  f:close()
+  return ifaces
+end
+local function get_ip(interface)
     if not interface then return end
     local f = io.popen("ip addr list "..interface .. " |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
     local ip = f:read("*line")
@@ -135,7 +148,7 @@ gears.wallpaper.maximized(beautiful.wallpaper, nil, true)
 -- {{{ Tags
 
 tags = {}
-tagnames = {" web", " social", " music", " devel", " docs", " porn", nil }
+tagnames = {" I ", " II ", " III ", " IV ", " V ", " VI ", nil }
 for s = 1, screen.count() do
     tags[s] = awful.tag(tagnames, s, layouts[10])
 end
@@ -195,6 +208,18 @@ mytaglist = {}
 mytasklist = {}
 mystatusbar = {}
 
+-- current ip search
+network_interfaces = get_interfaces()
+current_ip = ""
+connected_interface = ""
+for index,interface in pairs(network_interfaces) do
+  ip = get_ip(interface)
+  if ip ~= "no address" then
+    connected_interface = interface
+    current_ip = ip
+  end
+end
+
 for s = 1, screen.count() do
     -- Create a layoutbox
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -213,17 +238,16 @@ for s = 1, screen.count() do
     wifitransfer_info = wibox.widget.textbox()
       vicious.register(wifitransfer_info, vicious.widgets.net, 
         function(widget, args) 
-          local rate_down, rate_up
-          if getIP("wlan0") ~= "no address" then
-            rate_down = args["{wlan0 down_kb}"] 
-            rate_up = args["{wlan0 up_kb}"] 
-          elseif getIP("eth0") ~= "no address" then
-            rate_down = args["{eth0 down_kb}"] 
-            rate_up = args["{eth0 up_kb}"] 
-          else
-            return "no network connection"
+          if current_ip ~= "" then
+            local rate_down, rate_up, face_text, down_text, up_text
+            rate_down = args["{" .. connected_interface .. " down_kb}"] 
+            rate_up = args["{" .. connected_interface .. " up_kb}"] 
+            face_text = colorify(connected_interface, beautiful.fg_lightgray)
+            down_text = "down " .. colorify(displaytransfer_rate(rate_down), beautiful.fg_highlight)   
+            up_text = "up " .. colorify(displaytransfer_rate(rate_up), beautiful.fg_highlight) 
+            return face_text .. "  " .. down_text .. "   " .. up_text 
+          else return "no network connection"
           end
-          return "down " .. colorify(displaytransfer_rate(rate_down), beautiful.fg_highlight) .. "  up " .. colorify(displaytransfer_rate(rate_up), beautiful.fg_highlight)
         end, 1)
 
     -- Hard drives usage widgets

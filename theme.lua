@@ -4,11 +4,8 @@
 
 theme = {}
 
-theme.font = "Gros 6"
+theme.font = "DejaVu 7"
 themedir = "~/.config/awesome/themes"
-
---// Wallpaper
-theme.wallpaper = "~/.config/awesome/walls/archsome_min_gray.jpg"
 
 --// Custom icons
 -- Left layout

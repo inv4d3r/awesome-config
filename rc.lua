@@ -16,6 +16,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local treesome = require("treesome")
+local minitray = require("minitray")
 --local tyrannical = require("tyrannical")
 
 -- {{{ Error handling
@@ -51,6 +52,21 @@ local function debug(debug_string)
                    timeout = 5 })
 end
 
+local cur_time, last_time
+local function show_message(message)
+  if last_time == nil then
+    last_time = os.time()
+    debug(message)
+  else 
+    cur_time = os.date("%x %X")
+    diff = os.difftime(os.time(), last_time)
+    if diff > 2 then
+      last_time = os.time()
+      debug(message) 
+    end
+  end
+end
+
 local function getvolume()
   local fd = io.popen("amixer sget Master")
   local status = fd:read("*all")
@@ -59,6 +75,7 @@ local function getvolume()
   local volume = tonumber(string.match(status, "(%d?%d?%d)%%"))
   return volume
 end
+
 -- Widget utils
 local function colorify(text, color)
   return "<span color='" .. color .. "'>" .. text .. "</span>"
@@ -78,17 +95,19 @@ local function get_interfaces()
   f:close()
   return ifaces
 end
+
 local function get_ip(interface)
-    if not interface then return end
-    local f = io.popen("ip addr list "..interface .. " |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
-    local ip = f:read("*line")
-    f:close()
-    if ip then
-      return ip
-    else
-      return 'no address'
-    end
+  if not interface then return end
+  local f = io.popen("ip addr list "..interface .. " |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
+  local ip = f:read("*line")
+  f:close()
+  if ip then
+    return ip
+  else
+    return 'no address'
+  end
 end
+
 local function displaytransfer_rate(rate_kb)
   rate = tonumber(rate_kb)
   if rate > 1000 then return string.format("%.1f", rate/1000) .. " mb"
@@ -98,12 +117,16 @@ end
 -- Mouse handling
 local safeCoords = {x=0, y=800}
 local moveMouseOnStartup = true
+
 local function moveMouse(x_co, y_co)
-    mouse.coords({ x=x_co, y=y_co })
+  mouse.coords({ x=x_co, y=y_co })
 end
+
 if moveMouseOnStartup then
-        moveMouse(safeCoords.x, safeCoords.y)
+  moveMouse(safeCoords.x, safeCoords.y)
 end
+
+local center = { x = screen[1].workarea.width / 2, y = screen[1].workarea.height / 2 }
 
 -- {{{ Variable definitions
 configdir = "/home/invader/.config/awesome/"
@@ -140,17 +163,20 @@ local layouts =
 -- }}}
 
 -- {{{ Wallpaper
-gears.wallpaper.maximized(beautiful.wallpaper, nil, true)
+-- gears.wallpaper.maximized(beautiful.wallpaper, nil, true)
 --gears.wallpaper.centered(beautiful.wallpaper, nil, "")
 -- }}}
 
 
 -- {{{ Tags
 
-tags = {}
-tagnames = {" I ", " II ", " III ", " IV ", " V ", " VI ", nil }
+tags = { 
+  names = {" I ", " II ", " III ", " IV ", " V ", " VI ", " VII ", " VIII ", nil }, 
+  --layouts = { layouts[6], layouts[6], layouts[6], layouts[6], layouts[1], layouts[1], layouts[1], layouts[1] } 
+  layouts = { layouts[10], layouts[10], layouts[10], layouts[10], layouts[1], layouts[1], layouts[1], layouts[1] } 
+}
 for s = 1, screen.count() do
-    tags[s] = awful.tag(tagnames, s, layouts[10])
+    tags[s] = awful.tag(tags.names, s, tags.layouts)
 end
  
 -- }}}
@@ -208,18 +234,6 @@ mytaglist = {}
 mytasklist = {}
 mystatusbar = {}
 
--- current ip search
-network_interfaces = get_interfaces()
-current_ip = ""
-connected_interface = ""
-for index,interface in pairs(network_interfaces) do
-  ip = get_ip(interface)
-  if ip ~= "no address" then
-    connected_interface = interface
-    current_ip = ip
-  end
-end
-
 for s = 1, screen.count() do
     -- Create a layoutbox
     mylayoutbox[s] = awful.widget.layoutbox(s)
@@ -227,104 +241,103 @@ for s = 1, screen.count() do
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
     -- Create spacer widget
     spacer = wibox.widget.textbox()
-    spacer:set_markup(colorify(" ¦ ", beautiful.fg_darkgray))
+    spacer:set_markup(colorify(" | ", beautiful.fg_darkgray))
 
     -- Create the top wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_nearblack })
+    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_black })
 
     -- Create a net widget
-    netdown_icon = wibox.widget.imagebox()
-    netup_icon = wibox.widget.imagebox()
     wifitransfer_info = wibox.widget.textbox()
       vicious.register(wifitransfer_info, vicious.widgets.net, 
         function(widget, args) 
+          -- current ip search
+          local network_interfaces = get_interfaces()
+          local current_ip = ""
+          local connected_interface = ""
+          for index,interface in pairs(network_interfaces) do
+            ip = get_ip(interface)
+            if ip ~= "no address" then
+              connected_interface = interface
+              current_ip = ip
+            end
+          end
+
           if current_ip ~= "" then
             local rate_down, rate_up, face_text, down_text, up_text
             rate_down = args["{" .. connected_interface .. " down_kb}"] 
             rate_up = args["{" .. connected_interface .. " up_kb}"] 
-            face_text = colorify(connected_interface, beautiful.fg_lightgray)
-            down_text = "down " .. colorify(displaytransfer_rate(rate_down), beautiful.fg_highlight)   
-            up_text = "up " .. colorify(displaytransfer_rate(rate_up), beautiful.fg_highlight) 
-            return face_text .. "  " .. down_text .. "   " .. up_text 
+            face_text = colorify(connected_interface, beautiful.fg_turtlegreen)
+            down_text = "down " .. colorify(displaytransfer_rate(rate_down), beautiful.fg_jellybean_white)   
+            up_text = "up " .. colorify(displaytransfer_rate(rate_up), beautiful.fg_jellybean_white) 
+            return face_text .. "  " .. down_text .. "   " .. up_text .. " "
           else return "no network connection"
           end
         end, 1)
 
     -- Hard drives usage widgets
-    windrive_icon = wibox.widget.imagebox()
     windrive_widget = wibox.widget.textbox()
-    vicious.register(windrive_widget, vicious.widgets.fs, " windows " .. colorify(" ${/mnt/windows avail_gb} GB ", beautiful.fg_highlight), 10)
+    vicious.register(windrive_widget, vicious.widgets.fs, " windows " .. colorify(" ${/mnt/windows avail_gb} GB ", beautiful.fg_jellybean_white), 10)
 
-    homedrive_icon = wibox.widget.imagebox()
     homedrive_widget = wibox.widget.textbox()
-    vicious.register(homedrive_widget, vicious.widgets.fs, " home " .. colorify(" ${/home avail_gb} GB ", beautiful.fg_highlight), 10)
+    vicious.register(homedrive_widget, vicious.widgets.fs, " home " .. colorify(" ${/home avail_gb} GB ", beautiful.fg_jellybean_white), 10)
 
-    rootdrive_icon = wibox.widget.imagebox()
     rootdrive_widget = wibox.widget.textbox()
-    vicious.register(rootdrive_widget, vicious.widgets.fs, " root " .. colorify(" ${/ avail_gb} GB ", beautiful.fg_highlight), 10)
+    vicious.register(rootdrive_widget, vicious.widgets.fs, " root " .. colorify(" ${/ avail_gb} GB ", beautiful.fg_jellybean_white), 10)
 
     -- Mail widget
     mail_widget = wibox.widget.textbox()
-    mail_icon = wibox.widget.imagebox()
     vicious.register(mail_widget, vicious.widgets.gmail, 
       function(widget, args)
-        return " mail " .. colorify(args["{count}"], beautiful.fg_highlight) .. " "
+        return " mail " .. colorify(args["{count}"], beautiful.fg_jellybean_white) .. " "
       end, 120)
+      
     -- Volume widget
     volume_widget = wibox.widget.textbox()
     volume_icon = wibox.widget.imagebox()
     vicious.register(volume_widget, vicious.widgets.volume, 
       function(widget, args)
-        if args[1] <= 30 then
-          volume_icon:set_image(beautiful.volume_low_icon)
-        else if args[1] > 30 and args[1] < 70 then
-          volume_icon:set_image(beautiful.volume_mid_icon)
-        else 
-          volume_icon:set_image(beautiful.volume_high_icon)
-        end
-      end
-        return " vol" .. colorify(" " .. args[1] .. "% ", beautiful.fg_highlight) 
+        return " vol" .. colorify(" " .. args[1] .. "% ", beautiful.fg_turtlegreen) 
       end, 1, "Master")
     
     -- Battery widget
-    no_bat = false
-    bat_widget = wibox.widget.textbox()
-    vicious.register(bat_widget, vicious.widgets.bat,
-      function(widget, args)
-        if args[2] == 0 then
-          no_bat = true
-          return ""
-        else
-          return " " .. args[2] .. "% "
-        end
-      end, 60, "BAT0")
-    bat_icon = wibox.widget.imagebox()
+    --no_bat = false
+    --bat_widget = wibox.widget.textbox()
+    --vicious.register(bat_widget, vicious.widgets.bat,
+      --function(widget, args)
+        --if args[2] == 0 then
+          --no_bat = true
+          --return ""
+        --else
+          --return " " .. args[2] .. "% "
+        --end
+      --end, 60, "BAT0")
+    --bat_icon = wibox.widget.imagebox()
 
     -- MPD widget
     -- local mpd_args = { host = "192.168.0.17" } -- raspberry 
-    mpd_widget = wibox.widget.textbox()
-    vicious.register(mpd_widget, vicious.widgets.mpd,
-      function(widget, args)
-        str =  " " .. args["{Title}"] .. colorify(" [ ", beautiful.fg_highlight) .. args["{Artist}"] .. colorify(" ] ", beautiful.fg_highlight)
+    --mpd_widget = wibox.widget.textbox()
+    --vicious.register(mpd_widget, vicious.widgets.mpd,
+      --function(widget, args)
+        --str =  " " .. args["{Title}"] .. colorify(" [ ", beautiful.fg_highlight) .. args["{Artist}"] .. colorify(" ] ", beautiful.fg_highlight)
 
-        -- play
-        if (args["{state}"] == "Play") then
-        return str
+        ---- play
+        --if (args["{state}"] == "Play") then
+        --return str
 
-        -- pause
-        elseif (args["{state}"] == "Pause") then
-        return " mpd " .. colorify(" paused ", beautiful.fg_highlight)
+        ---- pause
+        --elseif (args["{state}"] == "Pause") then
+        --return " mpd " .. colorify(" paused ", beautiful.fg_highlight)
 
-        -- stop
-        elseif (args["{state}"] == "Stop") then
-        return " mpd " .. colorify(" stopped ", beautiful.fg_highlight)
+        ---- stop
+        --elseif (args["{state}"] == "Stop") then
+        --return " mpd " .. colorify(" stopped ", beautiful.fg_highlight)
 
-        -- not running
-        else
-        return " mpd off"
-      end
+        ---- not running
+        --else
+        --return " mpd off"
+      --end
 
-    end, 1)--, mpd_args)
+    --end, 1)--, mpd_args)
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
@@ -342,37 +355,40 @@ for s = 1, screen.count() do
     right_layout:add(spacer)
     right_layout:add(mail_widget)
     right_layout:add(spacer)
-    right_layout:add(mpd_widget)
-    right_layout:add(spacer)
+    --right_layout:add(mpd_widget)
+    --right_layout:add(spacer)
     right_layout:add(volume_widget)
     right_layout:add(spacer)
-    if not no_bat then
-      right_layout:add(bat_icon)
-      right_layout:add(bat_widget)
-      right_layout:add(spacer)
-    end
+    --if not no_bat then
+      --right_layout:add(bat_icon)
+      --right_layout:add(bat_widget)
+      --right_layout:add(spacer)
+    --end
     right_layout:add(mytextclock)
+    right_layout:add(spacer)
+    -- Systray widget
+    systray = wibox.widget.systray()
+    --if s == 1 then right_layout:add(systray) end
     right_layout:add(mylayoutbox[s])
+
 
     -- Now bring it all together
     local layout = wibox.layout.align.horizontal()
     layout:set_left(left_layout)
     layout:set_right(right_layout)
 
+
     mywibox[s]:set_widget(layout)
         
     -- Create a tasklist widget
     mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags)
 
-    bottom_left_layout = wibox.layout.fixed.horizontal()
+    --bottom_left_layout = wibox.layout.fixed.horizontal()
     bottom_right_layout = wibox.layout.fixed.horizontal()
     
-    -- Systray widget
-    systray = wibox.widget.systray()
-    if s == 1 then bottom_right_layout:add(systray) end
 
     local bottom_layout = wibox.layout.align.horizontal()
-    bottom_layout:set_left(bottom_left_layout)
+    --bottom_layout:set_left(bottom_left_layout)
     bottom_layout:set_middle(mytasklist[s])
     bottom_layout:set_right(bottom_right_layout)
 
@@ -384,6 +400,7 @@ end
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
+    awful.key({ modkey, "Shift"   }, "t",      function () minitray.toggle()                 end),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
@@ -414,17 +431,35 @@ globalkeys = awful.util.table.join(
         end),
     -- Custom keys
     awful.key({}, "XF86AudioRaiseVolume", function () 
+                                            local volume = getvolume()
                                             awful.util.spawn("amixer set Master 10%+") 
-                                            --debug("Volume: " .. getvolume() .. "%")
+                                            debug("Volume: " .. volume + 10 .. "%")
                                           end),
     awful.key({}, "XF86AudioLowerVolume", function () 
+                                            local volume = getvolume()
                                             awful.util.spawn("amixer set Master 10%-") 
-                                            --debug("Volume: " .. getvolume() .. "%")
+                                            debug("Volume: " .. volume - 10 .. "%")
                                           end),
-    awful.key({}, "XF86AudioPlay", function () awful.util.spawn("ncmpcpp toggle") end),
-    awful.key({}, "XF86AudioStop", function () awful.util.spawn("ncmpcpp stop") end),
-    awful.key({}, "XF86AudioNext", function () awful.util.spawn("ncmpcpp next") end),
-    awful.key({}, "XF86AudioPrev", function () awful.util.spawn("ncmpcpp prev") end),
+    awful.key({}, "XF86AudioPlay", function () 
+      debug("play/pause")
+      io.popen("/home/invader/scripts/spotinput.sh XF86AudioPlay")
+      awful.util.spawn("ncmpcpp toggle")
+    end),
+    awful.key({}, "XF86AudioStop", function ()
+      debug("stop")
+      io.popen("/home/invader/scripts/spotinput.sh XF86AudioStop")
+      awful.util.spawn("ncmpcpp stop")
+    end),
+    awful.key({}, "XF86AudioNext", function ()
+      debug("next")
+      io.popen("/home/invader/scripts/spotinput.sh XF86AudioNext")
+      awful.util.spawn("ncmpcpp next")
+    end),
+    awful.key({}, "XF86AudioPrev", function ()
+      debug("prev")
+      io.popen("/home/invader/scripts/spotinput.sh XF86AudioPrev")
+      awful.util.spawn("ncmpcpp prev")
+    end),
     awful.key({}, "Print", function () awful.util.spawn("shutter --select") end),
     awful.key({ modkey, "Mod1" }, "Left", function() awful.util.spawn("ncmpcpp volume -5") end),
     awful.key({ modkey, "Mod1" }, "Right", function() awful.util.spawn("ncmpcpp volume +5") end),
@@ -447,20 +482,29 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "Up",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
-                                                g['y']=16 + c.border_width
+                                                g['y'] = beautiful.get_font_height(beautiful.font) * 1.5
                                                 c:geometry(g)     
                                               end),
     awful.key({ modkey, "Shift"   }, "Right",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
-                                                g['x']=1280 - g['width'] - 2*c.border_width 
+                                                g['x'] = screen[1].workarea.width- g['width'] - 2*c.border_width 
                                                 c:geometry(g)     
                                               end),
     awful.key({ modkey, "Shift"   }, "Down",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
-                                                g['y']=780 - g['height'] - 2*c.border_width 
+                                                local topwibox_height = beautiful.get_font_height(beautiful.font) * 1.5 
+                                                local screen_height = screen[1].workarea.height
+                                                g['y'] = screen_height - g['height'] - 2*c.border_width + topwibox_height
                                                 c:geometry(g)     
+                                              end),
+    awful.key({ modkey, "Control"   }, "c",     function () 
+                                                c=client.focus 
+                                                g=c:geometry() 
+                                                if awful.client.floating.get(client) then
+                                                  awful.placement.centered(c, c.transient_for)
+                                                end
                                               end),
     awful.key({ modkey,           }, "w",     function () awful.client.moveresize(0,0,20,20)     end),
     awful.key({ modkey, "Shift"   }, "w",     function () awful.client.moveresize(0,0,-20,-20)     end),
@@ -480,7 +524,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () awful.util.spawn("dmenu_run -nf '#666' -sb '#000' -sf '#99ad6a' -fn 'Gros-6'") end)
+    awful.key({ modkey },            "r",     function () awful.util.spawn("dmenu_run -nf '#666' -sb '#000' -sf '#8cffba' -fn 'Gros-12'") end)
 )
 
 clientkeys = awful.util.table.join(
@@ -514,9 +558,9 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
-    awful.key({ modkey, "Control" }, "v",      treesome.vertical                                ),
-    awful.key({ modkey, "Control" }, "h",      treesome.horizontal                              ),
+    awful.key({ modkey, "Control" }, "t",      function (c) c.ontop = not c.ontop            end),
+    awful.key({ modkey, "Control" }, "v",      treesome.horizontal                              ),
+    awful.key({ modkey, "Control" }, "h",      treesome.vertical                                ),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -578,53 +622,36 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 awful.rules.rules = {
-  
-   { rule = { },
-     properties = { border_width = 0,
-                    focus = awful.client.focus.filter,
-                    size_hints_honor = false,
-                    keys = clientkeys,
-                    buttons = clientbuttons } },
-   { rule = { class = "MPlayer" },
-     properties = { floating = true, tag = tags[1][6] } },
-   { rule = { class = "URxvt" },
-     properties = { border_width = 2, } },    
-   { rule = { class = "pinentry" },
-     properties = { floating = true } },
-   { rule = { class = "Gimp" },
-       properties = { tag = tags[1][6] } },
-   { rule = { class = "Firefox" },
-     properties = { tag = tags[1][1] } },
-   { rule = { class = "luakit" },
-     properties = { tag = tags[1][1] } },
-   { rule = { class = "Deluge" },
-     properties = { tag = tags[1][1] } },
-   { rule = { class = "Filezilla" },
-     properties = { tag = tags[1][1] } },
-   { rule = { class = "Spotify" },
-     properties = { tag = tags[1][3] } },
-   { rule = { class = "Skype" },
-     properties = { tag = tags[1][2] } },
-   { rule = { class = "libreoffice-startcenter" },
-     properties = { tag = tags[1][5] } },
-   { rule = { class = "Xpdf" },
-     properties = { tag = tags[1][5] } },
-   { rule = { class = "jetbrains-idea-ce" },
-     properties = { tag = tags[1][4] } },
-   { rule = { class = "MonoDevelop" },
-     properties = { tag = tags[1][4] } },
-   { rule = { class = "codeblocks" },
-     properties = { tag = tags[1][4] } },
+ { 
+   rule = { },
+   properties = { 
+                  focus = awful.client.focus.filter,
+                  size_hints_honor = false,
+                  keys = clientkeys,
+                  buttons = clientbuttons
+                }
+ },
+ { 
+   rule = { class = "URxvt" }, properties = { border_width = 1 }
+ },
+ { 
+   rule = { class = "MuPDF" }, properties = { floating = true }
+ }
 }
 -- }}}
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c, startup)
+
+      if awful.client.floating.get(client) then
+        awful.placement.centered(c, c.transient_for)
+      end
+
       if not startup then
         -- Set the windows at the slave,
         -- i.e. put it at the end of others instead of setting it master.
-        --awful.client.setslave(c)
+        awful.client.setslave(c)
 
         -- Put windows in a smart way, only if they does not set an initial position.
         if not c.size_hints.user_position and not c.size_hints.program_position then
@@ -634,6 +661,6 @@ client.connect_signal("manage", function (c, startup)
     end
 end)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.fg_darkgray end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.fg_black end)
+client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}

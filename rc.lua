@@ -115,7 +115,7 @@ local function displaytransfer_rate(rate_kb)
 end
 
 -- Mouse handling
-local safeCoords = {x=0, y=800}
+local safeCoords = { x = 0, y = screen[1].workarea.height}
 local moveMouseOnStartup = true
 
 local function moveMouse(x_co, y_co)
@@ -136,7 +136,7 @@ beautiful.init("/home/invader/.config/awesome/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvt"
-browser = "firefox"
+browser = "tabbed -c -n vimprobable2 vimprobable2 -e"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -171,7 +171,7 @@ local layouts =
 -- {{{ Tags
 
 tags = { 
-  names = {" I ", " II ", " III ", " IV ", " V ", " VI ", " VII ", " VIII ", nil }, 
+  names = {"01", "10", "11", "100", "101", "110", "111", "1000", nil }, 
   --layouts = { layouts[6], layouts[6], layouts[6], layouts[6], layouts[1], layouts[1], layouts[1], layouts[1] } 
   layouts = { layouts[10], layouts[10], layouts[10], layouts[10], layouts[1], layouts[1], layouts[1], layouts[1] } 
 }
@@ -244,7 +244,7 @@ for s = 1, screen.count() do
     spacer:set_markup(colorify(" | ", beautiful.fg_darkgray))
 
     -- Create the top wibox
-    mywibox[s] = awful.wibox({ position = "top", screen = s, border_width = 0, border_color = beautiful.fg_black })
+    mywibox[s] = awful.wibox({ position = "top", screen = s, height = 20 })
 
     -- Create a net widget
     wifitransfer_info = wibox.widget.textbox()
@@ -266,7 +266,7 @@ for s = 1, screen.count() do
             local rate_down, rate_up, face_text, down_text, up_text
             rate_down = args["{" .. connected_interface .. " down_kb}"] 
             rate_up = args["{" .. connected_interface .. " up_kb}"] 
-            face_text = colorify(connected_interface, beautiful.fg_turtlegreen)
+            face_text = colorify(connected_interface, beautiful.fg_focus)
             down_text = "down " .. colorify(displaytransfer_rate(rate_down), beautiful.fg_jellybean_white)   
             up_text = "up " .. colorify(displaytransfer_rate(rate_up), beautiful.fg_jellybean_white) 
             return face_text .. "  " .. down_text .. "   " .. up_text .. " "
@@ -296,7 +296,7 @@ for s = 1, screen.count() do
     volume_icon = wibox.widget.imagebox()
     vicious.register(volume_widget, vicious.widgets.volume, 
       function(widget, args)
-        return " vol" .. colorify(" " .. args[1] .. "% ", beautiful.fg_turtlegreen) 
+        return " vol" .. colorify(" " .. args[1] .. "% ", beautiful.fg_focus) 
       end, 1, "Master")
     
     -- Battery widget
@@ -432,13 +432,11 @@ globalkeys = awful.util.table.join(
     -- Custom keys
     awful.key({}, "XF86AudioRaiseVolume", function () 
                                             local volume = getvolume()
-                                            awful.util.spawn("amixer set Master 10%+") 
-                                            debug("Volume: " .. volume + 10 .. "%")
+                                            awful.util.spawn("amixer set Master 5%+") 
                                           end),
     awful.key({}, "XF86AudioLowerVolume", function () 
                                             local volume = getvolume()
-                                            awful.util.spawn("amixer set Master 10%-") 
-                                            debug("Volume: " .. volume - 10 .. "%")
+                                            awful.util.spawn("amixer set Master 5%-") 
                                           end),
     awful.key({}, "XF86AudioPlay", function () 
       debug("play/pause")

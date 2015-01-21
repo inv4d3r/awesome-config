@@ -4,7 +4,7 @@
 
 theme = {}
 
-theme.font = "DejaVuMonoSans for Powerline 7"
+theme.font = "ProggyCleanTT 10"
 themedir = "~/.config/awesome/themes"
 
 --// Custom icons
@@ -45,9 +45,10 @@ theme.fg_jellybean_white = "#adadad" -- white
 theme.fg_red = "#a90000"
 theme.fg_highlight = theme.fg_jellybean_green
 theme.fg_turtlegreen = "#8cffba"
+theme.fg_skyblue = "#0aa6f5"
 
 --// Default Colors
-theme.bg_normal = theme.fg_nearblack
+theme.bg_normal = theme.fg_black
 theme.bg_focus  = theme.fg_black
 theme.bg_urgent = theme.fg_jellybean_orange
 theme.bg_minimize   = "#444444"

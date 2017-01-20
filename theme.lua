@@ -18,6 +18,7 @@ theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
 theme.tasklist_plain_task_name = true
 theme.awesome_icon = "~/.config/awesome/awesome32_gray.png"
+theme.awesome_icon_alt = "~/.config/awesome/awesome32_aqua.png"
 theme.useless_gap = 5
 theme.gap_single_client = false
 
@@ -26,7 +27,6 @@ theme.fg_white = "#eeeeee"
 theme.fg_black = "#000000"
 theme.fg_red = "#a90000"
 theme.fg_highlight = theme.fg_jellybean_green
-theme.fg_turtlegreen = "#8cffba"
 theme.fg_skyblue = "#0aa6f5"
 theme.fg_nearblack = "#111111"
 theme.fg_darkgray = "#444444"
@@ -67,6 +67,13 @@ theme.fg_gruvbox_aqua = "#8ec07c"
 theme.fg_gruvbox_gray = "#a89984"
 theme.fg_gruvbox_orange = "#fe8019"
 theme.fg_gruvbox_white = "#fbf1c7"
+theme.gruvbox_bg0_h = "#1d2021"
+theme.gruvbox_bg0_s = "#32302f"
+theme.gruvbox_bg0 = "#282828"
+theme.gruvbox_bg1 = "#3c3836"
+theme.gruvbox_bg2 = "#504945"
+theme.gruvbox_bg3 = "#665c54"
+theme.gruvbox_bg4 = "#7c6f64"
 
 --// Default Colors
 theme.bg_normal = theme.fg_black
@@ -94,7 +101,8 @@ theme.titlebar_bg_focus	= "#000000ff"
 theme.titlebar_font = theme.font
 
 -- Display the taglist squares
-theme.taglist_squares_sel = "/home/mzalewsk/.config/awesome/themes/taglist/square_bottom.png"
+--theme.taglist_squares_sel = "/home/mzalewsk/.config/awesome/themes/taglist/square_bottom.png"
+theme.taglist_squares_sel = "/home/mzalewsk/.config/awesome/themes/taglist/square_bottom_saltwatertaffy.png"
 theme.taglist_squares_unsel = "/home/mzalewsk/.config/awesome/themes/taglist/square_bottom_gray.png"
 
 ---- Custom layouts
@@ -110,7 +118,6 @@ theme.layout_max        = "/home/mzalewsk/.config/awesome/themes/layouts/max.png
 theme.layout_fullscreen = "/home/mzalewsk/.config/awesome/themes/layouts/fullscreen.png"
 theme.layout_magnifier  = "/home/mzalewsk/.config/awesome/themes/layouts/magnifier.png"
 theme.layout_floating   = "/home/mzalewsk/.config/awesome/themes/layouts/floating.png"
-theme.layout_treesome   = "/home/mzalewsk/.config/awesome/themes/layouts/treesome.png"
 
 theme.icon_theme = nil
 

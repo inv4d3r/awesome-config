@@ -156,8 +156,12 @@ end
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(
-  colorify{text = " %a %d %b %y ", fgcolor = beautiful.fg_bwc_dress} .. 
-  colorify{text = " %I:%M %p ", fgcolor = beautiful.fg_gruvbox_white})
+  colorify{text = " %a %d %b %y ", 
+           fgcolor = beautiful.fg_gruvbox_white,
+           bgcolor = beautiful.gruvbox_bg1} .. 
+  colorify{text = " %I:%M %p ",
+           fgcolor = beautiful.fg_gruvbox_gray,
+           bgcolor = beautiful.gruvbox_bg2})
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -176,27 +180,41 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
     spacer = wibox.widget.textbox(" | ")
+    hfill = wibox.widget.textbox("  ")
 
     volume_widget = wibox.widget.textbox()
     vicious.register(volume_widget, vicious.widgets.volume, 
       function(widget, args)
-        return colorify{text = " vol ", fgcolor = beautiful.fg_bwc_toffee} .. 
-               colorify{text = args[1] .. "% ", fgcolor = beautiful.fg_bwc_toffee}
+        return 
+        colorify{text = " vol ",
+                  fgcolor = beautiful.fg_gruvbox_white,
+                  bgcolor = beautiful.gruvbox_bg1} ..
+        colorify{text = " " .. args[1] .. "% ", 
+                  fgcolor = beautiful.fg_gruvbox_gray,
+                  bgcolor = beautiful.gruvbox_bg2}
       end, 1, "Master")
 
     homefs_widget = wibox.widget.textbox()
     vicious.register(homefs_widget, vicious.widgets.fs, 
-        colorify({text = " home ", fgcolor = beautiful.fg_bwc_dalespale}) .. 
-        colorify({text = " ${/home avail_gb} GB ", fgcolor = beautiful.fg_bwc_dirtyblonde}), 10)
+        colorify{text = " home ",
+                  fgcolor = beautiful.fg_gruvbox_white,
+                  bgcolor = beautiful.gruvbox_bg1} .. 
+        colorify{text = " ${/home avail_gb} GB ",
+                  fgcolor = beautiful.fg_gruvbox_gray,
+                  bgcolor = beautiful.gruvbox_bg2}, 10)
 
     rootfs_widget = wibox.widget.textbox()
     vicious.register(rootfs_widget, vicious.widgets.fs,
-        colorify({text = " / ", fgcolor = beautiful.fg_gruvbox_purple}) ..
-        colorify({text = " ${/ avail_gb} GB ", 
-                  fgcolor = beautiful.fg_gruvbox_purple}), 10)
+        colorify{text = " / ",
+                  fgcolor = beautiful.fg_gruvbox_white,
+                  bgcolor = beautiful.gruvbox_bg1} ..
+
+        colorify{text = " ${/ avail_gb} GB ", 
+                  fgcolor = beautiful.fg_gruvbox_gray,
+                  bgcolor = beautiful.gruvbox_bg2}, 10)
         
     net_widget = wibox.widget.textbox()
-    net_widget.forced_width = 160
+    net_widget.forced_width = 140
     vicious.register(net_widget, vicious.widgets.net, 
       function(widget, args) 
         -- current ip search
@@ -217,14 +235,22 @@ awful.screen.connect_for_each_screen(function(s)
           rate_down = args["{" .. connected_interface .. " down_kb}"] 
           rate_up = args["{" .. connected_interface .. " up_kb}"] 
           
-          face_text = colorify({text = " " .. connected_interface, fgcolor = beautiful.fg_turtlegreen})
-          down_text = colorify({text = displaytransfer_rate(rate_down), 
-                                           fgcolor = beautiful.fg_gruvbox_aqua})
-          up_text = colorify({text = displaytransfer_rate(rate_up),
-                                       fgcolor = beautiful.fg_gruvbox_aqua}) 
-          net_text = face_text .. "  " .. down_text .. "  " .. up_text .. " "
+          face_text = colorify{text = " " .. connected_interface .. " ",
+                                fgcolor = beautiful.fg_gruvbox_white,
+                                bgcolor = beautiful.gruvbox_bg1}
+
+          down_text = colorify{text = " " .. displaytransfer_rate(rate_down) .. " ", 
+                                fgcolor = beautiful.fg_gruvbox_gray,
+                                bgcolor = beautiful.gruvbox_bg2}
+
+          up_text = colorify{text = " " .. displaytransfer_rate(rate_up) .. " ",
+                              fgcolor = beautiful.gruvbox_bg2,
+                              bgcolor = beautiful.fg_gruvbox_gray}
+
+          net_text = face_text .. down_text .. up_text
         else 
-          net_text = "no network connection"
+          net_text = colorify{text = "no network connection",
+                              fgcolor = beautiful.fg_bwc_taffy}
         end
         return net_text
       end, 1)
@@ -241,7 +267,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mylayoutbox = awful.widget.layoutbox(s)
 
     -- AwesomeWM icon
-    awesome_icon = wibox.widget.imagebox(beautiful.awesome_icon, true, nil)
+    s.awesome_icon = wibox.widget.imagebox(beautiful.awesome_icon, true, nil)
     
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.noempty)
@@ -257,7 +283,7 @@ awful.screen.connect_for_each_screen(function(s)
         layout = wibox.layout.align.horizontal,
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
-            awesome_icon,
+            s.awesome_icon,
             s.mytaglist,
             spacer,
             --s.mypromptbox,
@@ -267,13 +293,13 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             spacer,
             net_widget,
-            spacer,
+            hfill,
             homefs_widget,
-            spacer,
+            hfill,
             rootfs_widget,
-            spacer,
+            hfill,
             volume_widget,
-            spacer,
+            hfill,
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
@@ -282,10 +308,23 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 -- }}}
 
+alt_icon = false
+
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
+    awful.key({ modkey,           }, "a",      
+                function() 
+                  s = awful.screen.focused()
+                  if(alt_icon) then
+                    s.awesome_icon.image = beautiful.awesome_icon
+                  else
+                    s.awesome_icon.image = beautiful.awesome_icon_alt
+                  end
+                  alt_icon = not alt_icon
+                end,
+              {description="transform icon", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext,

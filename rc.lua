@@ -36,10 +36,6 @@ local function colorify(arg)
     arg.fgcolor = beautiful.fg_normal
   end
 
-  if arg.bgcolor == nil then
-    arg.bgcolor = beautiful.bg_normal
-  end
-
   local font_weight = ""
   if arg.weight ~= nil then
     font_weight = " font_weight='" .. arg.weight .. "' "
@@ -47,7 +43,7 @@ local function colorify(arg)
     font_weight = " font_weight='bold' "
   end
 
-  return "<span" .. font_weight .. " font-size='small' background='" .. arg.bgcolor .. "' color='" .. arg.fgcolor .. "'>" .. arg.text .. "</span>"
+  return "<span" .. font_weight .. " color='" .. arg.fgcolor .. "'>" .. arg.text .. "</span>"
 end
 
 local function displaytransfer_rate(rate_kb)
@@ -103,10 +99,15 @@ end
 
 local config_dir = "~/.config/awesome/"
 beautiful.init(config_dir .. "theme.lua")
+local apw = require("apw/widget")
+apwTimer = timer({ timeout = 5 }) -- seconds
+apwTimer:connect_signal("timeout", apw.Update)
+apwTimer:start()
+
 hints.init()
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = "termite"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -157,11 +158,10 @@ end
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(
   colorify{text = " %a %d %b %y ", 
-           fgcolor = beautiful.fg_gruvbox_white,
-           bgcolor = beautiful.gruvbox_bg1} .. 
+           fgcolor = beautiful.gruvbox_white } ..
   colorify{text = " %I:%M %p ",
-           fgcolor = beautiful.fg_gruvbox_gray,
-           bgcolor = beautiful.gruvbox_bg2})
+           fgcolor = beautiful.aqua })
+mytextclock_bg = wibox.container.background(mytextclock, beautiful.gruvbox_bg0_h)
 
 local function set_wallpaper(s)
     -- Wallpaper
@@ -179,42 +179,25 @@ end
 screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
-    spacer = wibox.widget.textbox(" | ")
-    hfill = wibox.widget.textbox("  ")
-
-    volume_widget = wibox.widget.textbox()
-    vicious.register(volume_widget, vicious.widgets.volume, 
-      function(widget, args)
-        return 
-        colorify{text = " vol ",
-                  fgcolor = beautiful.fg_gruvbox_white,
-                  bgcolor = beautiful.gruvbox_bg1} ..
-        colorify{text = " " .. args[1] .. "% ", 
-                  fgcolor = beautiful.fg_gruvbox_gray,
-                  bgcolor = beautiful.gruvbox_bg2}
-      end, 1, "Master")
-
     homefs_widget = wibox.widget.textbox()
     vicious.register(homefs_widget, vicious.widgets.fs, 
         colorify{text = " home ",
-                  fgcolor = beautiful.fg_gruvbox_white,
-                  bgcolor = beautiful.gruvbox_bg1} .. 
+                  fgcolor = beautiful.gruvbox_white } ..
         colorify{text = " ${/home avail_gb} GB ",
-                  fgcolor = beautiful.fg_gruvbox_gray,
-                  bgcolor = beautiful.gruvbox_bg2}, 10)
+                  fgcolor = beautiful.gruvbox_gray }, 10)
+    homefs_widget_bg = wibox.container.background(homefs_widget, beautiful.gruvbox_bg0_h)
 
     rootfs_widget = wibox.widget.textbox()
     vicious.register(rootfs_widget, vicious.widgets.fs,
         colorify{text = " / ",
-                  fgcolor = beautiful.fg_gruvbox_white,
-                  bgcolor = beautiful.gruvbox_bg1} ..
+                  fgcolor = beautiful.gruvbox_white } ..
 
         colorify{text = " ${/ avail_gb} GB ", 
-                  fgcolor = beautiful.fg_gruvbox_gray,
-                  bgcolor = beautiful.gruvbox_bg2}, 10)
+                  fgcolor = beautiful.gruvbox_gray }, 10)
+    rootfs_widget_bg = wibox.container.background(rootfs_widget, beautiful.gruvbox_bg0_h)
         
     net_widget = wibox.widget.textbox()
-    net_widget.forced_width = 140
+    net_widget.forced_width = 200
     vicious.register(net_widget, vicious.widgets.net, 
       function(widget, args) 
         -- current ip search
@@ -235,30 +218,37 @@ awful.screen.connect_for_each_screen(function(s)
           rate_down = args["{" .. connected_interface .. " down_kb}"] 
           rate_up = args["{" .. connected_interface .. " up_kb}"] 
           
-          face_text = colorify{text = " " .. connected_interface .. " ",
-                                fgcolor = beautiful.fg_gruvbox_white,
-                                bgcolor = beautiful.gruvbox_bg1}
+          --face_text = colorify{text = " " .. connected_interface .. " ",
+          face_text = colorify{text = "  net ",
+                                fgcolor = beautiful.gruvbox_white,
+                                bgcolor = beautiful.gruvbox_bg0}
 
-          down_text = colorify{text = " " .. displaytransfer_rate(rate_down) .. " ", 
-                                fgcolor = beautiful.fg_gruvbox_gray,
-                                bgcolor = beautiful.gruvbox_bg2}
+          down_text = colorify{text = " " .. displaytransfer_rate(rate_down) .. "  ", 
+                                fgcolor = beautiful.gruvbox_gray,
+                                bgcolor = beautiful.gruvbox_bg0}
 
-          up_text = colorify{text = " " .. displaytransfer_rate(rate_up) .. " ",
-                              fgcolor = beautiful.gruvbox_bg2,
-                              bgcolor = beautiful.fg_gruvbox_gray}
+          up_text = colorify{text = " " .. displaytransfer_rate(rate_up) .. "  ",
+                              fgcolor = beautiful.gruvbox_gray,
+                              bgcolor = beautiful.gruvbox_bg0}
 
           net_text = face_text .. down_text .. up_text
         else 
-          net_text = colorify{text = "no network connection",
-                              fgcolor = beautiful.fg_bwc_taffy}
+          net_text = colorify{text = " no network connection ",
+                              fgcolor = beautiful.bwc_taffy}
         end
         return net_text
       end, 1)
+    net_widget_bg = wibox.container.background(net_widget, beautiful.gruvbox_bg0_h)
+
+    hfill = wibox.widget.textbox("")
+    hfill.forced_width = 1
+    hfill_bg = wibox.container.background(hfill, beautiful.nearblack)
+
     -- Wallpaper
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ " 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 " }, s, awful.layout.layouts[2])
+    awful.tag({" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 " }, s, awful.layout.layouts[2])
 
     -- Create a promptbox for each screen
     --s.mypromptbox = awful.widget.prompt()
@@ -284,25 +274,26 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Left widgets
             layout = wibox.layout.fixed.horizontal,
             s.awesome_icon,
+            hfill_bg,
             s.mytaglist,
-            spacer,
-            --s.mypromptbox,
+            hfill_bg
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            spacer,
-            net_widget,
-            hfill,
-            homefs_widget,
-            hfill,
-            rootfs_widget,
-            hfill,
-            volume_widget,
-            hfill,
-            wibox.widget.systray(),
-            mytextclock,
+            net_widget_bg,
+            hfill_bg,
+            homefs_widget_bg,
+            hfill_bg,
+            rootfs_widget_bg,
+            hfill_bg,
+            apw,
+            hfill_bg,
+            mytextclock_bg,
+            hfill_bg,
             s.mylayoutbox,
+            hfill_bg,
+            wibox.widget.systray()
         },
     }
 end)
@@ -325,9 +316,9 @@ globalkeys = awful.util.table.join(
                   alt_icon = not alt_icon
                 end,
               {description="transform icon", group="awesome"}),
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
+    awful.key({ modkey,           }, "[",   awful.tag.viewprev,
               {description = "view previous", group = "tag"}),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
+    awful.key({ modkey,           }, "]",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
@@ -344,6 +335,11 @@ globalkeys = awful.util.table.join(
         end,
         {description = "focus previous by index", group = "client"}
     ),
+    -- Multimedia keys
+    awful.key({}, "XF86AudioRaiseVolume", apw.Up),
+    awful.key({}, "XF86AudioLowerVolume", apw.Down),
+    awful.key({}, "XF86AudioMute", apw.ToggleMute),
+
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
               {description = "swap with next client by index", group = "client"}),
@@ -393,25 +389,25 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Mod1"    }, "r",     function () awful.util.spawn("reboot")    end),
     awful.key({ modkey, "Mod1"    }, "p",     function () awful.util.spawn("poweroff")    end),
-    awful.key({ modkey, "Shift"   }, "Left",     function () 
+    awful.key({ modkey,           }, "Left",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
                                                 g['x']=0
                                                 c:geometry(g)     
                                               end),
-    awful.key({ modkey, "Shift"   }, "Up",     function () 
+    awful.key({ modkey,           }, "Up",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
                                                 g['y'] = beautiful.get_font_height(beautiful.font) * 1.5
                                                 c:geometry(g)     
                                               end),
-    awful.key({ modkey, "Shift"   }, "Right",     function () 
+    awful.key({ modkey,           }, "Right",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
                                                 g['x'] = screen[1].workarea.width- g['width'] - 2*c.border_width 
                                                 c:geometry(g)     
                                               end),
-    awful.key({ modkey, "Shift"   }, "Down",     function () 
+    awful.key({ modkey,           }, "Down",     function () 
                                                 c=client.focus 
                                                 g=c:geometry() 
                                                 local topwibox_height = beautiful.get_font_height(beautiful.font) * 1.5 
@@ -428,10 +424,10 @@ globalkeys = awful.util.table.join(
                                               end),
     awful.key({ modkey,           }, "w",     function () awful.client.moveresize(0,0,20,20)     end),
     awful.key({ modkey, "Shift"   }, "w",     function () awful.client.moveresize(0,0,-20,-20)     end),
-    awful.key({ modkey, "Control"   }, "Left",     function () awful.client.moveresize(-20,0,0,0)     end),
-    awful.key({ modkey, "Control"   }, "Right",     function () awful.client.moveresize(20,0,0,0)     end),
-    awful.key({ modkey, "Control"   }, "Down",     function () awful.client.moveresize(0,20,0,0)     end),
-    awful.key({ modkey, "Control"   }, "Up",     function () awful.client.moveresize(0,-20,0,0)     end),
+    awful.key({ modkey, "Control"   }, "a",     function () awful.client.moveresize(-20,0,0,0)     end),
+    awful.key({ modkey, "Control"   }, "d",     function () awful.client.moveresize(20,0,0,0)     end),
+    awful.key({ modkey, "Control"   }, "s",     function () awful.client.moveresize(0,20,0,0)     end),
+    awful.key({ modkey, "Control"   }, "w",     function () awful.client.moveresize(0,-20,0,0)     end),
     awful.key({ modkey, "Shift"}, "c", function()
         local c = client.focus
         c:kill()
@@ -440,7 +436,9 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, }, "m", function()
         local c = client.focus
-        c.maximized = not c.maximized
+        if c then 
+          c.maximized = not c.maximized
+        end
         --c.sticky = not c.sticky
         --c.floating = not c.floating
       end,
@@ -472,7 +470,10 @@ globalkeys = awful.util.table.join(
               function () hints.focus() end),
 
     awful.key({ modkey }, "r",     
-              function () awful.util.spawn("rofi -show run") end)
+              function () awful.util.spawn("rofi -show run") end),
+
+    awful.key({ modkey }, "b",     
+              function () awful.util.spawn("qutebrowser") end)
 )
 
 -- Bind all key numbers to tags.

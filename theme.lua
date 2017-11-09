@@ -7,8 +7,7 @@ theme = {}
 theme.font = "Inconsolata 10"
 themedir = "~/.config/awesome/themes"
 
---theme.wallpaper = "~/wallpapers/archlinux-classic-notext.png"
-theme.wallpaper = "~/wallpapers/necromancer.jpg"
+theme.wallpaper = "~/pictures/wallpapers/necromancer.jpg"
 
 --theme.tasklist_sticky = " S "
 --theme.tasklist_floating = " F "

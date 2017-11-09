@@ -39,7 +39,7 @@ local function colorify(arg)
   local font_weight = ""
   if arg.weight ~= nil then
     font_weight = " font_weight='" .. arg.weight .. "' "
-  else 
+  else
     font_weight = " font_weight='bold' "
   end
 
@@ -107,9 +107,11 @@ apwTimer:start()
 hints.init()
 
 -- This is used later as the default terminal and editor to run.
-terminal = "termite"
-editor = os.getenv("EDITOR") or "vim"
+terminal = "urxvt"
+editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
+sticky_note = "documents/sticky_note"
+
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -137,6 +139,7 @@ awful.layout.layouts = {
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
 }
+
 -- }}}
 
 -- {{{ Helper functions
@@ -157,7 +160,7 @@ end
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = awful.widget.textclock(
-  colorify{text = " %a %d %b %y ", 
+  colorify{text = " %a %d %b %y ",
            fgcolor = beautiful.gruvbox_white } ..
   colorify{text = " %I:%M %p ",
            fgcolor = beautiful.aqua })
@@ -180,7 +183,7 @@ screen.connect_signal("property::geometry", set_wallpaper)
 
 awful.screen.connect_for_each_screen(function(s)
     homefs_widget = wibox.widget.textbox()
-    vicious.register(homefs_widget, vicious.widgets.fs, 
+    vicious.register(homefs_widget, vicious.widgets.fs,
         colorify{text = " home ",
                   fgcolor = beautiful.gruvbox_white } ..
         colorify{text = " ${/home avail_gb} GB ",
@@ -192,14 +195,14 @@ awful.screen.connect_for_each_screen(function(s)
         colorify{text = " / ",
                   fgcolor = beautiful.gruvbox_white } ..
 
-        colorify{text = " ${/ avail_gb} GB ", 
+        colorify{text = " ${/ avail_gb} GB ",
                   fgcolor = beautiful.gruvbox_gray }, 10)
     rootfs_widget_bg = wibox.container.background(rootfs_widget, beautiful.gruvbox_bg0_h)
-        
+
     net_widget = wibox.widget.textbox()
     net_widget.forced_width = 200
-    vicious.register(net_widget, vicious.widgets.net, 
-      function(widget, args) 
+    vicious.register(net_widget, vicious.widgets.net,
+      function(widget, args)
         -- current ip search
         local network_interfaces = get_interfaces()
         local current_ip = ""
@@ -215,15 +218,15 @@ awful.screen.connect_for_each_screen(function(s)
 
         if current_ip ~= "" then
           local rate_down, rate_up, face_text, down_text, up_text
-          rate_down = args["{" .. connected_interface .. " down_kb}"] 
-          rate_up = args["{" .. connected_interface .. " up_kb}"] 
-          
+          rate_down = args["{" .. connected_interface .. " down_kb}"]
+          rate_up = args["{" .. connected_interface .. " up_kb}"]
+
           --face_text = colorify{text = " " .. connected_interface .. " ",
           face_text = colorify{text = "  net ",
                                 fgcolor = beautiful.gruvbox_white,
                                 bgcolor = beautiful.gruvbox_bg0}
 
-          down_text = colorify{text = " " .. displaytransfer_rate(rate_down) .. "  ", 
+          down_text = colorify{text = " " .. displaytransfer_rate(rate_down) .. "  ",
                                 fgcolor = beautiful.gruvbox_gray,
                                 bgcolor = beautiful.gruvbox_bg0}
 
@@ -232,7 +235,7 @@ awful.screen.connect_for_each_screen(function(s)
                               bgcolor = beautiful.gruvbox_bg0}
 
           net_text = face_text .. down_text .. up_text
-        else 
+        else
           net_text = colorify{text = " no network connection ",
                               fgcolor = beautiful.bwc_taffy}
         end
@@ -248,17 +251,17 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 " }, s, awful.layout.layouts[2])
-
+    awful.tag({" 1 ", " 2 ", " 3 ", " 4 ", " 5 ", " 6 ", " 7 ", " 8 ", " 9 " }, s, awful.layout.layouts[6])
     -- Create a promptbox for each screen
     --s.mypromptbox = awful.widget.prompt()
+
     -- Create an imagebox widget which will contains an icon indicating which layout we're using.
     -- We need one layoutbox per screen.
     s.mylayoutbox = awful.widget.layoutbox(s)
 
     -- AwesomeWM icon
     s.awesome_icon = wibox.widget.imagebox(beautiful.awesome_icon, true, nil)
-    
+
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist(s, awful.widget.taglist.filter.noempty)
 
@@ -276,7 +279,8 @@ awful.screen.connect_for_each_screen(function(s)
             s.awesome_icon,
             hfill_bg,
             s.mytaglist,
-            hfill_bg
+            hfill_bg,
+            --s.mypromptbox
         },
         s.mytasklist, -- Middle widget
         { -- Right widgets
@@ -305,8 +309,8 @@ alt_icon = false
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
-    awful.key({ modkey,           }, "a",      
-                function() 
+    awful.key({ modkey,           }, "a",
+                function()
                   s = awful.screen.focused()
                   if(alt_icon) then
                     s.awesome_icon.image = beautiful.awesome_icon
@@ -360,6 +364,14 @@ globalkeys = awful.util.table.join(
         end,
         {description = "go back", group = "client"}),
 
+    -- Sticky note
+    awful.key({ modkey, "Shift"   }, "s", function ()
+      awful.spawn(terminal .. " -e " .. editor .. " " .. sticky_note, {
+          floating  = true,
+          tag       = mouse.screen.selected_tag,
+          placement = awful.placement.top_right}) end,
+        {description = "show sticky note", group = "launcher"}),
+
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
@@ -389,35 +401,35 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Mod1"    }, "r",     function () awful.util.spawn("reboot")    end),
     awful.key({ modkey, "Mod1"    }, "p",     function () awful.util.spawn("poweroff")    end),
-    awful.key({ modkey,           }, "Left",     function () 
-                                                c=client.focus 
-                                                g=c:geometry() 
+    awful.key({ modkey,           }, "Left",     function ()
+                                                c=client.focus
+                                                g=c:geometry()
                                                 g['x']=0
-                                                c:geometry(g)     
+                                                c:geometry(g)
                                               end),
-    awful.key({ modkey,           }, "Up",     function () 
-                                                c=client.focus 
-                                                g=c:geometry() 
+    awful.key({ modkey,           }, "Up",     function ()
+                                                c=client.focus
+                                                g=c:geometry()
                                                 g['y'] = beautiful.get_font_height(beautiful.font) * 1.5
-                                                c:geometry(g)     
+                                                c:geometry(g)
                                               end),
-    awful.key({ modkey,           }, "Right",     function () 
-                                                c=client.focus 
-                                                g=c:geometry() 
-                                                g['x'] = screen[1].workarea.width- g['width'] - 2*c.border_width 
-                                                c:geometry(g)     
+    awful.key({ modkey,           }, "Right",     function ()
+                                                c=client.focus
+                                                g=c:geometry()
+                                                g['x'] = screen[1].workarea.width- g['width'] - 2*c.border_width
+                                                c:geometry(g)
                                               end),
-    awful.key({ modkey,           }, "Down",     function () 
-                                                c=client.focus 
-                                                g=c:geometry() 
-                                                local topwibox_height = beautiful.get_font_height(beautiful.font) * 1.5 
+    awful.key({ modkey,           }, "Down",     function ()
+                                                c=client.focus
+                                                g=c:geometry()
+                                                local topwibox_height = beautiful.get_font_height(beautiful.font) * 1.5
                                                 local screen_height = screen[1].workarea.height
                                                 g['y'] = screen_height - g['height'] - 2*c.border_width + topwibox_height
-                                                c:geometry(g)     
+                                                c:geometry(g)
                                               end),
-    awful.key({ modkey, "Control"   }, "c",     function () 
-                                                c=client.focus 
-                                                g=c:geometry() 
+    awful.key({ modkey, "Control"   }, "c",     function ()
+                                                c=client.focus
+                                                g=c:geometry()
                                                 if awful.client.floating.get(client) then
                                                   awful.placement.centered(c, c.transient_for)
                                                 end
@@ -436,7 +448,7 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, }, "m", function()
         local c = client.focus
-        if c then 
+        if c then
           c.maximized = not c.maximized
         end
         --c.sticky = not c.sticky
@@ -463,16 +475,18 @@ globalkeys = awful.util.table.join(
               end,
               {description = "restore minimized", group = "client"}),
 
-    awful.key({ modkey, "Mod1" }, "l",     
+    awful.key({ modkey, "Mod1" }, "l",
               function () awful.util.spawn("slimlock") end),
 
-    awful.key({ modkey, "Mod1" }, "j",     
+    awful.key({ modkey, "Mod1" }, "j",
               function () hints.focus() end),
 
-    awful.key({ modkey }, "r",     
-              function () awful.util.spawn("rofi -show run") end),
+    awful.key({ modkey }, "r",
+              function () awful.util.spawn("rofi -show run") end,
+              --function () awful.screen.focused().mypromptbox:run() end,
+              {group = "launcher"}),
 
-    awful.key({ modkey }, "b",     
+    awful.key({ modkey }, "b",
               function () awful.util.spawn("qutebrowser") end)
 )
 
@@ -574,28 +588,17 @@ awful.rules.rules = {
     -- Floating clients.
     { rule_any = {
         instance = {
-          "DTA",  -- Firefox addon DownThemAll.
-          "copyq",  -- Includes session name in class.
         },
         class = {
-          "Arandr",
-          "Gpick",
-          "Kruler",
-          "MessageWin",  -- kalarm.
-          "Sxiv",
-          "Wpa_gui",
-          "pinentry",
-          "veromix",
-          "xtightvncviewer"},
-
+          "MuPDF",
+          "mpv",
+          "Spotify"
+        },
         name = {
-          "Event Tester",  -- xev.
         },
         role = {
-          "AlarmWindow",  -- Thunderbird's calendar.
-          "pop-up",       -- e.g. Google Chrome's (detached) Developer Tools.
         }
-      }, properties = { floating = true }},
+      }, properties = { floating = true, maximized = true }},
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
     -- { rule = { class = "Firefox" },

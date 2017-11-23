@@ -1,0 +1,51 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+_update	apw/widget.lua	/^local function _update()$/;"	f
+client.connect_signal("focus", function(c) c.border_color 	rc.lua	/^client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)$/;"	f
+client.connect_signal("unfocus", function(c) c.border_color 	rc.lua	/^client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)$/;"	f
+client_menu_toggle_fn	rc.lua	/^local function client_menu_toggle_fn()$/;"	f
+colorify	rc.lua	/^local function colorify(arg)$/;"	f
+debug	rc.lua	/^local function debug(debug_string)$/;"	f
+debuginfo	hints.lua	/^function debuginfo( message )$/;"	f
+debuginfo	hints/hints.lua	/^function debuginfo( message )$/;"	f
+displaytransfer_rate	rc.lua	/^local function displaytransfer_rate(rate_kb)$/;"	f
+focus	hints.lua	/^function focus()$/;"	f
+focus	hints/hints.lua	/^function focus()$/;"	f
+get_interfaces	rc.lua	/^local function get_interfaces()$/;"	f
+get_ip	rc.lua	/^local function get_ip(interface)$/;"	f
+hide	minitray.lua	/^local function hide()$/;"	f
+if type(wallpaper) 	rc.lua	/^        if type(wallpaper) == "function" then$/;"	f
+init	hints.lua	/^function init()$/;"	f
+init	hints/hints.lua	/^function init()$/;"	f
+init	minitray.lua	/^local function init()$/;"	f
+label	tasklist.lua	/^    local function label(c) return tasklist_label(c, style) end$/;"	f
+local u 	tasklist.lua	/^    local u = function () tasklist_update(screen, w, buttons, filter, data, style, uf) end$/;"	f
+local uf 	tasklist.lua	/^    local uf = update_function or common.list_update$/;"	f
+minitray.toggle	minitray.lua	/^function minitray.toggle(geometry)$/;"	f
+pulseWidget.Down	apw/widget.lua	/^function pulseWidget.Down()$/;"	f
+pulseWidget.LaunchMixer	apw/widget.lua	/^function pulseWidget.LaunchMixer()$/;"	f
+pulseWidget.SetMixer	apw/widget.lua	/^function pulseWidget.SetMixer(command)$/;"	f
+pulseWidget.ToggleMute	apw/widget.lua	/^function pulseWidget.ToggleMute()$/;"	f
+pulseWidget.Up	apw/widget.lua	/^function pulseWidget.Up()$/;"	f
+pulseWidget.Update	apw/widget.lua	/^function pulseWidget.Update()$/;"	f
+pulseWidget.setColor	apw/widget.lua	/^function pulseWidget.setColor(mute)$/;"	f
+pulseaudio:Create	apw/pulseaudio.lua	/^function pulseaudio:Create()$/;"	f
+pulseaudio:SetVolume	apw/pulseaudio.lua	/^function pulseaudio:SetVolume(vol)$/;"	f
+pulseaudio:ToggleMute	apw/pulseaudio.lua	/^function pulseaudio:ToggleMute()$/;"	f
+pulseaudio:UpdateState	apw/pulseaudio.lua	/^function pulseaudio:UpdateState()$/;"	f
+run	apw/pulseaudio.lua	/^local function run(command)$/;"	f
+set_wallpaper	rc.lua	/^local function set_wallpaper(s)$/;"	f
+show	minitray.lua	/^local function show()$/;"	f
+tasklist.filter.allscreen	tasklist.lua	/^function tasklist.filter.allscreen(c, screen)$/;"	f
+tasklist.filter.alltags	tasklist.lua	/^function tasklist.filter.alltags(c, screen)$/;"	f
+tasklist.filter.currenttags	tasklist.lua	/^function tasklist.filter.currenttags(c, screen)$/;"	f
+tasklist.filter.focused	tasklist.lua	/^function tasklist.filter.focused(c, screen)$/;"	f
+tasklist.filter.minimizedcurrenttags	tasklist.lua	/^function tasklist.filter.minimizedcurrenttags(c, screen)$/;"	f
+tasklist.mt:__call	tasklist.lua	/^function tasklist.mt:__call(...)$/;"	f
+tasklist.new	tasklist.lua	/^function tasklist.new(screen, filter, buttons, style, update_function, base_widget)$/;"	f
+tasklist_label	tasklist.lua	/^local function tasklist_label(c, args)$/;"	f
+tasklist_update	tasklist.lua	/^local function tasklist_update(s, w, buttons, filter, data, style, update_function)$/;"	f

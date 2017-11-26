@@ -2,13 +2,20 @@
 -- Gruvbox awesome theme --
 ---------------------------
 
+local awful = require("awful")
+awful.util = require("awful.util")
+
+home = os.getenv("HOME")
+config_dir = awful.util.get_configuration_dir()
+theme_dir = config_dir .. "/themes/gruvbox/"
+
 theme = {}
 
 theme.font = "Inconsolata 10"
 
 -- Exportable fs variables
-theme.wallpaper = "~/pictures/wallpapers/necromancer.jpg"
-theme.awesome_icon = "~/.config/awesome/themes/gruvbox/awesome_icon.png"
+theme.wallpaper = theme_dir .. "necromancer.jpg"
+theme.awesome_icon = theme_dir .. "awesome_icon.png"
 
 --theme.tasklist_sticky = " S "
 --theme.tasklist_floating = " F "
@@ -80,9 +87,7 @@ theme.fs_fg_color = theme.gray
 theme.fs_bg_color = theme.bg0
 -- }}
 
--- {{{
-
---// Borders
+-- {{ Borders
 theme.border_width = "0"
 theme.border_normal = theme.bg0_h
 theme.border_focus = theme.gray
@@ -90,22 +95,22 @@ theme.border_marked = theme.white
 
 -- Display the taglist squares
 --theme.taglist_squares_sel = "taglist/square_bottom.png"
-theme.taglist_squares_sel = "taglist/square_bottom_sel.png"
-theme.taglist_squares_unsel = "taglist/square_bottom_unsel.png"
+theme.taglist_squares_sel   = theme_dir .. "taglist/square_bottom_sel.png"
+theme.taglist_squares_unsel = theme_dir .. "taglist/square_bottom_unsel.png"
 
 ---- Custom layouts
-theme.layout_tile       = "layouts/tile.png"
-theme.layout_tileleft   = "layouts/tileleft.png"
-theme.layout_tilebottom = "layouts/tilebottom.png"
-theme.layout_tiletop    = "layouts/tiletop.png"
-theme.layout_fairv      = "layouts/fairv.png"
-theme.layout_fairh      = "layouts/fairh.png"
-theme.layout_spiral     = "layouts/spiral.png"
-theme.layout_dwindle    = "layouts/dwindle.png"
-theme.layout_max        = "layouts/max.png"
-theme.layout_fullscreen = "layouts/fullscreen.png"
-theme.layout_magnifier  = "layouts/magnifier.png"
-theme.layout_floating   = "layouts/floating.png"
+theme.layout_tile       = theme_dir .. "layouts/tile.png"
+theme.layout_tileleft   = theme_dir .. "layouts/tileleft.png"
+theme.layout_tilebottom = theme_dir .. "layouts/tilebottom.png"
+theme.layout_tiletop    = theme_dir .. "layouts/tiletop.png"
+theme.layout_fairv      = theme_dir .. "layouts/fairv.png"
+theme.layout_fairh      = theme_dir .. "layouts/fairh.png"
+theme.layout_spiral     = theme_dir .. "layouts/spiral.png"
+theme.layout_dwindle    = theme_dir .. "layouts/dwindle.png"
+theme.layout_max        = theme_dir .. "layouts/max.png"
+theme.layout_fullscreen = theme_dir .. "layouts/fullscreen.png"
+theme.layout_magnifier  = theme_dir .. "layouts/magnifier.png"
+theme.layout_floating   = theme_dir .. "layouts/floating.png"
 
 theme.icon_theme = nil
 

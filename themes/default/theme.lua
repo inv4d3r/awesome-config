@@ -2,13 +2,20 @@
 -- Default awesome theme --
 ---------------------------
 
+local awful = require("awful")
+awful.util = require("awful.util")
+
+home = os.getenv("HOME")
+config_dir = awful.util.get_configuration_dir()
+theme_dir = config_dir .. "/themes/default/"
+
 theme = {}
 
 theme.font = "Inconsolata 10"
 
 -- Exportable fs variables
-theme.wallpaper = "~/pictures/wallpapers/necromancer.jpg"
-theme.awesome_icon = "~/.config/awesome/themes/default/awesome_icon.png"
+theme.wallpaper = theme_dir .. "background.png"
+theme.awesome_icon = theme_dir .. "awesome_icon.png"
 
 --theme.tasklist_sticky = " S "
 --theme.tasklist_floating = " F "
@@ -33,14 +40,14 @@ theme.darkgray = "#444444"
 theme.lightgray = "#888888"
 
 -- Jellybean
-theme.jellybean_green = "#99ad6a" 
+theme.jellybean_green = "#99ad6a"
 theme.jellybean_orange = "#ff9500"
 theme.jellybean_gray = "#393939" -- gray
 theme.jellybean_red = "#cf6a4c"  -- red
 theme.jellybean_green = "#96ad6a" -- green
-theme.jellybean_yellow = "#d8ad4c"  -- yellow 
-theme.jellybean_blue = "#597bc5" -- blue 
-theme.jellybean_purple = "#a037b0" -- purple 
+theme.jellybean_yellow = "#d8ad4c"  -- yellow
+theme.jellybean_blue = "#597bc5" -- blue
+theme.jellybean_purple = "#a037b0" -- purple
 theme.jellybean_aqua = "#6eb5f3" -- light_blue
 theme.jellybean_white = "#adadad" -- white
 
@@ -50,7 +57,7 @@ theme.bwc_dirtyblonde = "#f4cf86" -- dirty yellow
 theme.bwc_taffy = "#ff2c4b" -- red
 theme.bwc_saltwatertaffy = "#8cffba" -- aqua
 theme.bwc_tardis = "#0a9dff" -- blue
-theme.bwc_orange = "#ffa724" 
+theme.bwc_orange = "#ffa724"
 theme.bwc_lime = "#aeee00" -- green
 theme.bwc_dress = "#ff9eb8" -- pink
 theme.bwc_toffee = "#b88853" -- brown
@@ -93,16 +100,37 @@ theme.fg_focus = theme.white
 theme.fg_urgent = theme.black
 theme.fg_minimize = theme.white
 
---// APW
+-- {{ APW
 theme.apw_bg_color = theme.gruvbox_bg0_h
 theme.apw_fg_color = theme.gruvbox_bg1
 theme.apw_text_color = theme.gruvbox_aqua
+-- }}
 
---// Borders
+-- {{ Textclock
+theme.clock_bg_color = theme.gruvbox_bg0
+theme.date_fg_color = theme.gruvbox_gray
+theme.time_fg_color = theme.gruvbox_white
+-- }}
+
+-- {{ Net widget
+theme.nonet_fg_color = theme.gruvbox_red
+theme.netface_fg_color = theme.gruvbox_white
+theme.netrate_fg_color = theme.gruvbox_gray
+theme.net_bg_color = theme.gruvbox_bg0
+-- }}
+
+-- {{{ Fs widgets
+theme.fs_dir_fg_color = theme.gruvbox_white
+theme.fs_fg_color = theme.gruvbox_gray
+theme.fs_bg_color = theme.gruvbox_bg0
+-- }}
+
+-- {{ Borders
 theme.border_width = "0"
 theme.border_normal = theme.nearblack
 theme.border_focus = theme.jellybean_gray
-theme.border_marked = theme.white
+theme.border_marked = theme.gruvbox_white
+-- {{
 
 --// Titlebars
 theme.titlebar_fg_normal = "#808080"
@@ -113,22 +141,22 @@ theme.titlebar_font = theme.font
 
 -- Display the taglist squares
 --theme.taglist_squares_sel = "taglist/square_bottom.png"
-theme.taglist_squares_sel = "taglist/square_bottom_sel.png"
-theme.taglist_squares_unsel = "taglist/square_bottom_unsel.png"
+theme.taglist_squares_sel =   theme_dir .. "taglist/square_bottom_sel.png"
+theme.taglist_squares_unsel = theme_dir .. "taglist/square_bottom_unsel.png"
 
 ---- Custom layouts
-theme.layout_tile       = "layouts/tile.png"
-theme.layout_tileleft   = "layouts/tileleft.png"
-theme.layout_tilebottom = "layouts/tilebottom.png"
-theme.layout_tiletop    = "layouts/tiletop.png"
-theme.layout_fairv      = "layouts/fairv.png"
-theme.layout_fairh      = "layouts/fairh.png"
-theme.layout_spiral     = "layouts/spiral.png"
-theme.layout_dwindle    = "layouts/dwindle.png"
-theme.layout_max        = "layouts/max.png"
-theme.layout_fullscreen = "layouts/fullscreen.png"
-theme.layout_magnifier  = "layouts/magnifier.png"
-theme.layout_floating   = "layouts/floating.png"
+theme.layout_tile       = theme_dir .. "layouts/tile.png"
+theme.layout_tileleft   = theme_dir .. "layouts/tileleft.png"
+theme.layout_tilebottom = theme_dir .. "layouts/tilebottom.png"
+theme.layout_tiletop    = theme_dir .. "layouts/tiletop.png"
+theme.layout_fairv      = theme_dir .. "layouts/fairv.png"
+theme.layout_fairh      = theme_dir .. "layouts/fairh.png"
+theme.layout_spiral     = theme_dir .. "layouts/spiral.png"
+theme.layout_dwindle    = theme_dir .. "layouts/dwindle.png"
+theme.layout_max        = theme_dir .. "layouts/max.png"
+theme.layout_fullscreen = theme_dir .. "layouts/fullscreen.png"
+theme.layout_magnifier  = theme_dir .. "layouts/magnifier.png"
+theme.layout_floating   = theme_dir .. "layouts/floating.png"
 
 theme.icon_theme = nil
 

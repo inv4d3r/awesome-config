@@ -97,12 +97,13 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 
-local config_dir = "~/.config/awesome/themes/"
---local theme_name = "default"
+local config_dir = "~/.config/"
+local themes_dir = "~/.config/awesome/themes/"
+local theme_name = "default"
 --local theme_name = "gruvbox"
-local theme_name = "jellybean"
+--local theme_name = "jellybean"
 --local theme_name = "bwc"
-beautiful.init(config_dir .. theme_name .. "/theme.lua")
+beautiful.init(themes_dir .. theme_name .. "/theme.lua")
 
 local apw = require("apw/widget")
 apwTimer = timer({ timeout = 5 }) -- seconds
@@ -365,7 +366,7 @@ globalkeys = awful.util.table.join(
               function () hints.focus() end),
 
     awful.key({ modkey }, "r",
-              function () awful.util.spawn("rofi -show run") end,
+              function () awful.util.spawn("rofi -show run -theme " .. config_dir .. "rofi/gruvbox.rasi") end,
               --function () awful.screen.focused().mypromptbox:run() end,
               {group = "launcher"}),
 

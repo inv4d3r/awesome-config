@@ -99,7 +99,8 @@ end
 
 local config_dir = "~/.config/"
 local themes_dir = "~/.config/awesome/themes/"
-local theme_name = "default"
+--local theme_name = "default"
+local theme_name = "dracula"
 --local theme_name = "gruvbox"
 --local theme_name = "jellybean"
 --local theme_name = "bwc"

@@ -5,18 +5,20 @@
 local awful = require("awful")
 awful.util = require("awful.util")
 
+-- {{ Initialization
 home = os.getenv("HOME")
 config_dir = awful.util.get_configuration_dir()
 theme_dir = config_dir .. "/themes/dracula/"
-
 theme = {}
+-- }}
 
+-- {{ Exportable variables
 theme.font = "Hack 8"
-
--- Exportable fs variables
 theme.wallpaper = theme_dir .. "background.png"
 theme.awesome_icon = theme_dir .. "awesome_icon.png"
+-- }}
 
+-- {{ Configuration variables
 --theme.tasklist_sticky = " S "
 --theme.tasklist_floating = " F "
 --theme.tasklist_maximized_horizontal = " H "
@@ -28,6 +30,7 @@ theme.tasklist_plain_task_name = true
 theme.useless_gap = 5
 theme.gap_single_client = false
 theme.apw_show_text = true
+-- }}
 
 -- {{ Dracula colors
 theme.realblack = "#000000"
@@ -57,6 +60,7 @@ theme.fg_urgent = theme.black
 theme.fg_minimize = theme.white
 -- }}
 
+-- Horizontal fill color
 theme.hfill_bg_color = theme.realblack
 
 -- {{ APW
@@ -78,7 +82,7 @@ theme.netrate_fg_color = theme.cyan
 theme.net_bg_color = theme.black
 -- }}
 
--- {{{ Fs widgets
+-- {{ Fs widgets
 theme.fs_dir_fg_color = theme.white
 theme.fs_fg_color = theme.purple
 theme.fs_bg_color = theme.black
@@ -91,13 +95,14 @@ theme.border_focus = theme.gray
 theme.border_marked = theme.white
 -- {{
 
--- Display the taglist squares
+-- {{ Display the taglist squares
 --theme.taglist_squares_sel = "taglist/square_bottom.png"
 theme.taglist_squares_sel =   theme_dir .. "taglist/square_bottom_sel.png"
 theme.taglist_squares_unsel = theme_dir .. "taglist/square_bottom_unsel.png"
 theme.taglist_spacing = 1
+-- }}
 
----- Custom layouts
+-- {{ Custom layouts
 theme.layout_tile       = theme_dir .. "layouts/tile.png"
 theme.layout_tileleft   = theme_dir .. "layouts/tileleft.png"
 theme.layout_tilebottom = theme_dir .. "layouts/tilebottom.png"
@@ -110,6 +115,7 @@ theme.layout_max        = theme_dir .. "layouts/max.png"
 theme.layout_fullscreen = theme_dir .. "layouts/fullscreen.png"
 theme.layout_magnifier  = theme_dir .. "layouts/magnifier.png"
 theme.layout_floating   = theme_dir .. "layouts/floating.png"
+-- }}
 
 theme.icon_theme = nil
 

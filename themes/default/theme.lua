@@ -142,6 +142,7 @@ theme.border_marked = theme.gruvbox_white
 -- {{ Display the taglist squares
 theme.taglist_squares_sel =   theme_dir .. "taglist/square_bottom_sel.png"
 theme.taglist_squares_unsel = theme_dir .. "taglist/square_bottom_unsel.png"
+theme.taglist_spacing = 1
 -- }}
 
 -- {{ Custom layouts

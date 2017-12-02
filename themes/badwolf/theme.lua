@@ -1,5 +1,5 @@
 ---------------------------
--- Dracula awesome theme --
+-- Badwolf awesome theme --
 ---------------------------
 
 local awful = require("awful")
@@ -7,14 +7,14 @@ awful.util = require("awful.util")
 
 home = os.getenv("HOME")
 config_dir = awful.util.get_configuration_dir()
-theme_dir = config_dir .. "/themes/dracula/"
+theme_dir = config_dir .. "/themes/badwolf/"
 
 theme = {}
 
-theme.font = "Hack 8"
+theme.font = "Inconsolata 10"
 
 -- Exportable fs variables
-theme.wallpaper = theme_dir .. "background.png"
+theme.wallpaper = theme_dir .. "background.jpg"
 theme.awesome_icon = theme_dir .. "awesome_icon.png"
 
 --theme.tasklist_sticky = " S "
@@ -29,73 +29,88 @@ theme.useless_gap = 5
 theme.gap_single_client = false
 theme.apw_show_text = true
 
--- {{ Dracula colors
-theme.realblack = "#000000"
-theme.black = "#282a36"
-theme.nearblack = "#44475a"
-theme.white = "#f8f8f2"
-theme.gray = "#6272a4"
-theme.cyan = "#8be9fd"
-theme.green = "#50fa7b"
-theme.orange = "#ffb86c"
-theme.pink = "#ff79c6"
-theme.purple = "#bd93f9"
-theme.red = "#ff5555"
-theme.yellow = "#f1fa8c"
--- }}
+-- Badwolf
+theme.white = "#ffffff"
+theme.black = "#000000"
 
--- {{ Default Colors
+theme.brightgravel   = "#d9cec3"
+theme.lightgravel    = "#998f84"
+theme.gravel         = "#857f78"
+theme.mediumgravel   = "#666462"
+theme.deepgravel     = "#45413b"
+theme.deepergravel   = "#35322d"
+theme.darkgravel     = "#242321"
+theme.blackgravel    = "#1c1b1a"
+theme.blackestgravel = "#141413"
+
+theme.yellow = "#fade3e" -- dalespale
+theme.dirty_yellow = "#f4cf86" -- dirtyblond
+theme.red = "#ff2c4b" -- taffy
+theme.aqua = "#8cffba" -- saltwater
+theme.blue = "#0a9dff" -- tardis
+theme.orange = "#ffa724"
+theme.green = "#aeee00" -- lime
+theme.pink = "#ff9eb8" -- dress
+theme.brown = "#b88853" -- toffee
+theme.other_brown = "#c7915b" -- coffee
+theme.dark_brown = "#88633f" -- darkroast
+
+--// Generic colors
+theme.black = theme.coal
+theme.nearblack = theme.blackestgravel
+theme.gray = theme.mediumgravel
+
+--// Default Colors
 theme.bg_normal = theme.black
-theme.bg_focus = theme.nearblack
+theme.bg_focus = theme.darkgravel
 theme.bg_urgent = theme.orange
-theme.bg_minimize = theme.nearblack
+theme.bg_minimize = theme.darkgravel
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = theme.white
-theme.fg_focus = theme.white
+theme.fg_normal = theme.lightgravel
+theme.fg_focus = theme.green
 theme.fg_urgent = theme.black
 theme.fg_minimize = theme.white
--- }}
 
-theme.hfill_bg_color = theme.realblack
+theme.hfill_bg_color = theme.nearblack
 
--- {{ APW
-theme.apw_bg_color = theme.black
-theme.apw_fg_color = theme.nearblack
-theme.apw_text_color = theme.green
--- }}
-
--- {{ Textclock
-theme.clock_bg_color = theme.black
-theme.date_fg_color = theme.yellow
+-- {{{ Textclock
+theme.clock_bg_color = theme.darkgravel
+theme.date_fg_color = theme.dirty_yellow
 theme.time_fg_color = theme.pink
 -- }}
 
--- {{ Net widget
+-- {{{ Net widget
 theme.nonet_fg_color = theme.red
-theme.netface_fg_color = theme.white
-theme.netrate_fg_color = theme.cyan
-theme.net_bg_color = theme.black
+theme.netface_fg_color = theme.blue
+theme.netrate_fg_color = theme.lightgravel
+theme.net_bg_color = theme.darkgravel
 -- }}
 
 -- {{{ Fs widgets
-theme.fs_dir_fg_color = theme.white
-theme.fs_fg_color = theme.purple
-theme.fs_bg_color = theme.black
+theme.fs_dir_fg_color = theme.orange
+theme.fs_fg_color = theme.lightgravel
+theme.fs_bg_color = theme.darkgravel
 -- }}
 
--- {{ Borders
+-- {{{
+
+-- {{{ APW
+theme.apw_bg_color = theme.nearblack
+theme.apw_fg_color = theme.darkgravel
+theme.apw_text_color = theme.aqua
+-- }}}
+
+--// Borders
 theme.border_width = "0"
 theme.border_normal = theme.nearblack
 theme.border_focus = theme.gray
 theme.border_marked = theme.white
--- {{
 
 -- Display the taglist squares
---theme.taglist_squares_sel = "taglist/square_bottom.png"
-theme.taglist_squares_sel =   theme_dir .. "taglist/square_bottom_sel.png"
+theme.taglist_squares_sel = "taglist/square_bottom.png"
+theme.taglist_squares_sel   = theme_dir .. "taglist/square_bottom_sel.png"
 theme.taglist_squares_unsel = theme_dir .. "taglist/square_bottom_unsel.png"
-theme.taglist_spacing = 1
 
 ---- Custom layouts
 theme.layout_tile       = theme_dir .. "layouts/tile.png"

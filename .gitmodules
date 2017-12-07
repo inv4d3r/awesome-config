@@ -1,10 +1,3 @@
-[submodule "treesome"]
-	path = treesome
-	url = https://github.com/RobSis/treesome.git
 [submodule "hints"]
 	path = hints
-	url = https://github.com/zackpete/hints.git
-[submodule "apw"]
-	path = apw
-	url = https://github.com/gutobenn/apw.git
-	branch = master
+	url = https://github.com/zackpete/hints

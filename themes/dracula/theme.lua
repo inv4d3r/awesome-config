@@ -29,7 +29,6 @@ theme.tasklist_align = "center"
 theme.tasklist_plain_task_name = true
 theme.useless_gap = 5
 theme.gap_single_client = false
-theme.apw_show_text = true
 -- }}
 
 -- {{ Dracula colors
@@ -66,7 +65,9 @@ theme.hfill_bg_color = theme.realblack
 -- {{ APW
 theme.apw_bg_color = theme.black
 theme.apw_fg_color = theme.nearblack
+theme.apw_show_text = true
 theme.apw_text_color = theme.green
+theme.apw_text_weight = "bold"
 -- }}
 
 -- {{ Textclock

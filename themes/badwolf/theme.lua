@@ -29,7 +29,6 @@ theme.tasklist_align = "center"
 theme.tasklist_plain_task_name = true
 theme.useless_gap = 5
 theme.gap_single_client = false
-theme.apw_show_text = true
 -- }}
 
 -- {{ Badwolf colors
@@ -103,7 +102,9 @@ theme.fs_bg_color = theme.darkgravel
 -- {{ APW
 theme.apw_bg_color = theme.nearblack
 theme.apw_fg_color = theme.darkgravel
+theme.apw_show_text = true
 theme.apw_text_color = theme.aqua
+theme.apw_text_weight = 'bold'
 -- }}
 
 -- {{ Borders

@@ -1,3 +1,6 @@
 [submodule "hints"]
 	path = hints
 	url = https://github.com/zackpete/hints
+[submodule "apw"]
+	path = apw
+	url = https://github.com/inv4d3r/apw

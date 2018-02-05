@@ -330,6 +330,9 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioRaiseVolume", apw.Up),
     awful.key({}, "XF86AudioLowerVolume", apw.Down),
     awful.key({}, "XF86AudioMute", apw.ToggleMute),
+    awful.key({}, "XF86AudioPlay", function() awful.util.spawn("spcli play") end),
+    awful.key({}, "XF86AudioPrev", function() awful.util.spawn("spcli prev") end),
+    awful.key({}, "XF86AudioNext", function() awful.util.spawn("spcli next") end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -427,13 +430,7 @@ globalkeys = awful.util.table.join(
                                                 g['y'] = screen_height - g['height'] - 2*c.border_width + topwibox_height
                                                 c:geometry(g)
                                               end),
-    awful.key({ modkey, "Control"   }, "c",     function ()
-                                                c=client.focus
-                                                g=c:geometry()
-                                                if awful.client.floating.get(client) then
-                                                  awful.placement.centered(c, c.transient_for)
-                                                end
-                                              end),
+    awful.key({ modkey, "Control"   }, "c",   awful.placement.centered),
     awful.key({ modkey,           }, "w",     function () awful.client.moveresize(0,0,20,20)     end),
     awful.key({ modkey, "Shift"   }, "w",     function () awful.client.moveresize(0,0,-20,-20)     end),
     awful.key({ modkey, "Control"   }, "a",     function () awful.client.moveresize(-20,0,0,0)     end),
@@ -588,10 +585,11 @@ awful.rules.rules = {
         instance = {
         },
         class = {
-          "MuPDF",
-          "mpv",
-          "Pinentry",
-          "Spotify"
+          --"MuPDF",
+          --"mpv",
+          --"Pinentry",
+          --"Spotify",
+          --"Zathura"
         },
         name = {
         },

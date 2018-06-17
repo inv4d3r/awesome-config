@@ -27,7 +27,7 @@ theme.awesome_icon = theme_dir .. "awesome_icon.png"
 theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
 theme.tasklist_plain_task_name = true
-theme.useless_gap = 5
+theme.useless_gap = 2
 theme.gap_single_client = false
 -- }}
 

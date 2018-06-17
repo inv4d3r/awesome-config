@@ -113,7 +113,7 @@ apwTimer:start()
 hints.init()
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvt"
+terminal = "termite"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 sticky_note = "documents/sticky_note"

@@ -19,22 +19,19 @@ theme.awesome_icon = theme_dir .. "awesome_icon.png"
 -- }}
 
 -- {{ Configuration variables
---theme.tasklist_sticky = " S "
---theme.tasklist_floating = " F "
---theme.tasklist_maximized_horizontal = " H "
---theme.tasklist_maximized_vertical = " V "
---theme.tasklist_maximized = " M "
+--theme.tasklist_sticky = "[S]"
+--theme.tasklist_floating = "[F]"
+--theme.tasklist_maximized_horizontal = "[H]"
+--theme.tasklist_maximized_vertical = "[V]"
+--theme.tasklist_maximized = "[M]"
 theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
 theme.tasklist_plain_task_name = true
-theme.useless_gap = 5
+theme.useless_gap = 2
 theme.gap_single_client = false
 -- }}
 
 -- {{ Badwolf colors
-theme.white = "#ffffff"
-theme.black = "#000000"
-
 theme.brightgravel   = "#d9cec3"
 theme.lightgravel    = "#998f84"
 theme.gravel         = "#857f78"
@@ -59,51 +56,52 @@ theme.dark_brown = "#88633f" -- darkroast
 -- }}
 
 -- {{ Generic colors
-theme.black = theme.coal
-theme.nearblack = theme.blackestgravel
+theme.white = "#ffffff"
+theme.black = theme.blackestgravel
+theme.nearblack = theme.blackgravel
 theme.gray = theme.mediumgravel
 -- }}
 
 -- {{ Default Colors
-theme.bg_normal = theme.black
-theme.bg_focus = theme.darkgravel
+theme.bg_normal = theme.darkgravel
+theme.bg_focus = theme.deepgravel
 theme.bg_urgent = theme.orange
 theme.bg_minimize = theme.darkgravel
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = theme.lightgravel
-theme.fg_focus = theme.green
-theme.fg_urgent = theme.black
-theme.fg_minimize = theme.white
+theme.fg_normal = theme.brightgravel
+theme.fg_focus = theme.dirty_yellow
+theme.fg_urgent = theme.orange
+theme.fg_minimize = theme.mediumgravel
 -- }}
 
 -- Horizontal fill color
-theme.hfill_bg_color = theme.nearblack
+theme.hfill_bg_color = theme.blackestgravel
 
 -- {{ Textclock
 theme.clock_bg_color = theme.darkgravel
-theme.date_fg_color = theme.dirty_yellow
-theme.time_fg_color = theme.pink
+theme.date_fg_color = theme.blue
+theme.time_fg_color = theme.green
 -- }}
 
 -- {{ Net widget
 theme.nonet_fg_color = theme.red
-theme.netface_fg_color = theme.blue
-theme.netrate_fg_color = theme.lightgravel
+theme.netface_fg_color = theme.other_brown
+theme.netrate_fg_color = theme.dirty_yellow
 theme.net_bg_color = theme.darkgravel
 -- }}
 
 -- {{ Fs widgets
-theme.fs_dir_fg_color = theme.orange
-theme.fs_fg_color = theme.lightgravel
-theme.fs_bg_color = theme.darkgravel
+theme.fs_dir_fg_color = theme.pink
+theme.fs_fg_color = theme.brightgravel
+theme.fs_bg_color = theme.deepergravel
 -- }}
 
 -- {{ APW
-theme.apw_bg_color = theme.nearblack
-theme.apw_fg_color = theme.darkgravel
+theme.apw_bg_color = theme.darkgravel
+theme.apw_fg_color = theme.deepergravel
 theme.apw_show_text = true
-theme.apw_text_color = theme.aqua
+theme.apw_text_color = theme.yellow
 theme.apw_text_weight = 'bold'
 -- }}
 

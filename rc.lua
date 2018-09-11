@@ -368,8 +368,11 @@ globalkeys = awful.util.table.join(
               function () hints.focus() end),
 
     awful.key({ modkey }, "r",
-              function () awful.util.spawn("rofi -show run -theme " .. config_dir .. "rofi/gruvbox.rasi") end,
-              --function () awful.screen.focused().mypromptbox:run() end,
+              function () awful.util.spawn("dmenu_run -p 'run:' -fn '" .. beautiful.font .. "' " ..
+                                            "-nb '" .. beautiful.bg_normal .. "' " ..
+                                            "-sb '" .. beautiful.bg_focus .. "' " ..
+                                            "-nf '" .. beautiful.fg_normal .. "' " ..
+                                            "-sf '" .. beautiful.fg_focus .. "' ") end,
               {group = "launcher"}),
 
     awful.key({ modkey }, "b",

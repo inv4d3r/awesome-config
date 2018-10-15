@@ -63,14 +63,14 @@ theme.gray = theme.mediumgravel
 -- }}
 
 -- {{ Default Colors
-theme.bg_normal = theme.darkgravel
-theme.bg_focus = theme.deepgravel
+theme.bg_normal = theme.blackgravel
+theme.bg_focus = theme.black
 theme.bg_urgent = theme.orange
 theme.bg_minimize = theme.darkgravel
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = theme.brightgravel
-theme.fg_focus = theme.dirty_yellow
+theme.fg_normal = theme.white
+theme.fg_focus = theme.white
 theme.fg_urgent = theme.orange
 theme.fg_minimize = theme.mediumgravel
 -- }}
@@ -79,9 +79,9 @@ theme.fg_minimize = theme.mediumgravel
 theme.hfill_bg_color = theme.blackestgravel
 
 -- {{ Textclock
-theme.clock_bg_color = theme.darkgravel
-theme.date_fg_color = theme.blue
-theme.time_fg_color = theme.green
+theme.clock_bg_color = theme.blackgravel
+theme.date_fg_color = theme.white
+theme.time_fg_color = theme.red
 -- }}
 
 -- {{ Net widget
@@ -93,8 +93,8 @@ theme.net_bg_color = theme.darkgravel
 
 -- {{ Fs widgets
 theme.fs_dir_fg_color = theme.pink
-theme.fs_fg_color = theme.brightgravel
-theme.fs_bg_color = theme.deepergravel
+theme.fs_fg_color = theme.mediumgravel
+theme.fs_bg_color = theme.blackgravel
 -- }}
 
 -- {{ APW

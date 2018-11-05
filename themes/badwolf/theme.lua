@@ -71,7 +71,7 @@ theme.bg_systray = theme.bg_normal
 
 theme.fg_normal = theme.white
 theme.fg_focus = theme.white
-theme.fg_urgent = theme.orange
+theme.fg_urgent = theme.white
 theme.fg_minimize = theme.mediumgravel
 -- }}
 
@@ -103,6 +103,14 @@ theme.apw_fg_color = theme.deepergravel
 theme.apw_show_text = true
 theme.apw_text_color = theme.yellow
 theme.apw_text_weight = 'bold'
+-- }}
+
+-- {{ Battery
+theme.bat_charging = theme.fg_normal
+theme.bat_not_charging = theme.yellow
+theme.bat_low = theme.red
+theme.bat_medium = theme.blue
+theme.bat_high = theme.green
 -- }}
 
 -- {{ Borders

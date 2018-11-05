@@ -59,7 +59,7 @@ theme.bg_systray = theme.nearblack
 
 theme.fg_normal = theme.white
 theme.fg_focus = theme.white
-theme.fg_urgent = theme.orange
+theme.fg_urgent = theme.white
 theme.fg_minimize = theme.white
 -- }}
 
@@ -72,6 +72,14 @@ theme.apw_fg_color = theme.darkgray
 theme.apw_show_text = true
 theme.apw_text_color = theme.aqua_dark
 theme.apw_text_weight = "bold"
+
+-- {{ Battery
+theme.bat_charging = theme.fg_normal
+theme.bat_not_charging = theme.yellow
+theme.bat_low = theme.red
+theme.bat_medium = theme.blue
+theme.bat_high = theme.green
+-- }}
 
 -- {{ Textclock
 theme.clock_bg_color = theme.nearblack

@@ -56,7 +56,7 @@ theme.bg_systray = theme.bg_normal
 
 theme.fg_normal = theme.deepspace_gray4
 theme.fg_focus = theme.deepspace_gray5
-theme.fg_urgent = theme.deepspace_gray1
+theme.fg_urgent = theme.deepspace_gray5
 theme.fg_minimize = theme.deepspace_gray5
 -- }}
 
@@ -66,6 +66,14 @@ theme.apw_fg_color = theme.deepspace_gray3
 theme.apw_show_text = true
 theme.apw_text_color = theme.deepspace_cyan
 theme.apw_text_weight = "bold"
+-- }}
+
+-- {{ Battery
+theme.bat_charging = theme.fg_normal
+theme.bat_not_charging = theme.deepspace_yellow
+theme.bat_low = theme.deepspace_red
+theme.bat_medium = theme.deepspace_blue
+theme.bat_high = theme.deepspace_green
 -- }}
 
 -- {{ Textclock

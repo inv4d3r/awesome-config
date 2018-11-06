@@ -718,7 +718,13 @@ awful.rules.rules = {
 
     {
       rule_any = { class = { "firefox", "Firefox", "qutebrowser" } },
+      except = { type = "dialog" },
       properties = { tag = awful.screen.focused().tags[2], floating = true, maximized = true }
+    },
+
+    {
+      rule = { type = "dialog" },
+      properties = { floating = true, placement = awful.placement.centered }
     },
 
     {

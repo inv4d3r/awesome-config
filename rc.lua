@@ -728,6 +728,11 @@ awful.rules.rules = {
     },
 
     {
+      rule = { class = "Gcr-prompter" },
+      properties = { floating = true, placement = awful.placement.centered }
+    },
+
+    {
       rule = { class = "Boostnote" },
       properties = { tag = awful.screen.focused().tags[3], floating = true, maximized = true }
     },

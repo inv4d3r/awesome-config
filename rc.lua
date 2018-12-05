@@ -351,14 +351,33 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "]",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
 
-    -- Windows navigation
+    -- Client vim-like navigation
+    awful.key({ modkey,           }, "o", awful.client.focus.history.previous,
+        {description = "focus prev client from history", group = "client"}),
+
+    awful.key({ modkey,           }, ";",
+        function () awful.client.focus.byidx(1) end,
+        {description = "focus next client by index", group = "client"}),
+
+    awful.key({ modkey,           }, ",",
+        function () awful.client.focus.byidx(-1) end,
+        {description = "focus prev client by index", group = "client"}),
+
     awful.key({ modkey,           }, "j",
-        function () awful.client.focus.byidx( 1) end,
-        {description = "focus next by index", group = "client"}),
+        function () awful.client.focus.bydirection("down") end,
+        {description = "focus client on the bottom", group = "client"}),
 
     awful.key({ modkey,           }, "k",
-        function () awful.client.focus.byidx(-1) end,
-        {description = "focus previous by index", group = "client"}),
+        function () awful.client.focus.bydirection("up") end,
+        {description = "focus client on the top", group = "client"}),
+
+    awful.key({ modkey,           }, "h",
+        function () awful.client.focus.bydirection("left") end,
+        {description = "focus client on the left", group = "client"}),
+
+    awful.key({ modkey,           }, "l",
+        function () awful.client.focus.bydirection("right") end,
+        {description = "focus client on the right", group = "client"}),
 
     -- Multimedia keys
     awful.key({}, "XF86AudioRaiseVolume", apw.Up),
@@ -376,14 +395,21 @@ globalkeys = awful.util.table.join(
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
               {description = "swap with next client by index", group = "client"}),
+
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
+
+    -- Screen navigation
     awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
               {description = "focus the next screen", group = "screen"}),
+
     awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
+
+    -- Client jumps
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
               {description = "jump to urgent client", group = "client"}),
+
     awful.key({ modkey,           }, "Tab",
         function ()
             awful.client.focus.history.previous()
@@ -464,19 +490,23 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Mod1"    }, "p", function () awful.util.spawn("poweroff") end,
       {description = "poweroff", group = "launcher"}),
 
-    -- Tiled clients manipulation
-    awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
+    -- Master windows manipulation
+    awful.key({ modkey,           }, "m",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
-    awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
+
+    awful.key({ modkey, "Control" }, "m",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
 
     awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
               {description = "increase the number of master clients", group = "layout"}),
+
     awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
               {description = "decrease the number of master clients", group = "layout"}),
 
+    -- Column windows manipulation
     awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
+
     awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
 
@@ -572,7 +602,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "o", function (c) c:move_to_screen() end,
       {description = "move to screen", group = "client"}),
 
-    awful.key({ modkey, "Control" }, "t", function (c) c.ontop = not c.ontop end,
+    awful.key({ modkey, "Shift" }, "o", function (c) c.ontop = not c.ontop end,
       {description = "toggle keep on top", group = "client"}),
 
     awful.key({ modkey, "Shift" }, "n",

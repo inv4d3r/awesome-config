@@ -9,6 +9,10 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+require("awful.hotkeys_popup.keys")
+
 local vicious = require("vicious")
 local hints = require("hints")
 
@@ -88,14 +92,13 @@ local function get_ip(interface)
 end
 
 -- {{{ Variable definitions
--- Themes define colours, icons, font and wallpapers.
-
 local config_dir = "~/.config/"
 local themes_dir = "~/.config/awesome/themes/"
 local theme_name = os.getenv("THEME") or "default"
 if theme_name == "" then
   theme_name = "default"
 end
+-- Themes define colours, icons, font and wallpapers.
 beautiful.init(themes_dir .. theme_name .. "/theme.lua")
 
 local apw = require("apw/widget")
@@ -364,6 +367,11 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioPlay", function() awful.util.spawn("spotifycli --playpause") end),
     awful.key({}, "XF86AudioPrev", function() awful.util.spawn("spotifycli --prev") end),
     awful.key({}, "XF86AudioNext", function() awful.util.spawn("spotifycli --next") end),
+    awful.key({}, "XF86Display",
+      function()
+        awful.util.spawn("~/scripts/setup-screen.sh")
+        awesome.restart()
+      end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
@@ -545,7 +553,13 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"}, "c", function(c) c:kill() end,
       {description = "kill", group = "client"}),
 
-    awful.key({ modkey, "Shift" }, "f", awful.client.floating.toggle,
+    awful.key({ modkey, "Shift" }, "f",
+      function(c)
+        if c.maximized then
+          c.maximized = false
+        end
+        awful.client.floating.toggle()
+      end,
       {description = "toggle floating", group = "client"}),
 
     awful.key({ modkey, "Shift" }, "s", function(c) c.sticky = not c.sticky end,
@@ -682,6 +696,11 @@ clientkeys = awful.util.table.join(
     {description = "move focused client to next tag", group = "client" })
 )
 
+clientbuttons = gears.table.join(
+    awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
+    awful.button({ modkey }, 1, awful.mouse.client.move),
+    awful.button({ modkey }, 3, awful.mouse.client.resize))
+
 -- Set keys
 root.keys(globalkeys)
 -- }}}
@@ -697,7 +716,8 @@ awful.rules.rules = {
                      raise = true,
                      screen = awful.screen.preferred,
                      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
-                     keys = clientkeys
+                     keys = clientkeys,
+                     buttons = clientbuttons
      }
     },
 

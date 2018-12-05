@@ -19,14 +19,17 @@ theme.awesome_icon = theme_dir .. "awesome_icon.png"
 -- }}
 
 -- {{ Configuration variables
---theme.tasklist_sticky = "[S]"
---theme.tasklist_floating = "[F]"
---theme.tasklist_maximized_horizontal = "[H]"
---theme.tasklist_maximized_vertical = "[V]"
---theme.tasklist_maximized = "[M]"
+theme.tasklist_sticky = "s/"
+theme.tasklist_ontop = "o/"
+theme.tasklist_above = "a/"
+theme.tasklist_below = "b/"
+theme.tasklist_floating = "f/"
+theme.tasklist_maximized_horizontal = "h/"
+theme.tasklist_maximized_vertical = "v/"
+theme.tasklist_maximized = "M/"
 theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
-theme.tasklist_plain_task_name = true
+theme.tasklist_plain_task_name = false
 theme.useless_gap = 2
 theme.gap_single_client = false
 -- }}

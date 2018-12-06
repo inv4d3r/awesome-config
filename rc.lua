@@ -352,9 +352,6 @@ globalkeys = awful.util.table.join(
               {description = "view next", group = "tag"}),
 
     -- Client vim-like navigation
-    awful.key({ modkey,           }, "o", awful.client.focus.history.previous,
-        {description = "focus prev client from history", group = "client"}),
-
     awful.key({ modkey,           }, ";",
         function () awful.client.focus.byidx(1) end,
         {description = "focus next client by index", group = "client"}),
@@ -379,32 +376,42 @@ globalkeys = awful.util.table.join(
         function () awful.client.focus.bydirection("right") end,
         {description = "focus client on the right", group = "client"}),
 
-    -- Multimedia keys
-    awful.key({}, "XF86AudioRaiseVolume", apw.Up),
-    awful.key({}, "XF86AudioLowerVolume", apw.Down),
-    awful.key({}, "XF86AudioMute", apw.ToggleMute),
-    awful.key({}, "XF86AudioPlay", function() awful.util.spawn("spotifycli --playpause") end),
-    awful.key({}, "XF86AudioPrev", function() awful.util.spawn("spotifycli --prev") end),
-    awful.key({}, "XF86AudioNext", function() awful.util.spawn("spotifycli --next") end),
-    awful.key({}, "XF86Display",
-      function()
-        awful.util.spawn("~/scripts/setup-screen.sh")
-        awesome.restart()
-      end),
+    awful.key({ modkey,           }, "o", awful.client.focus.history.previous,
+        {description = "focus prev client from history", group = "client"}),
 
-    -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
+    awful.key({ modkey,           }, "c",
+        function () awful.client.cycle(true) end,
+        {description = "focus next client (cycle clockwise)", group = "client"}),
+
+    awful.key({ modkey, "Shift"   }, "c",
+        function () awful.client.cycle(true) end,
+        {description = "focus prev client (cycle counter clockwise)", group = "client"}),
+
+    -- Client swapping
+    awful.key({ modkey, "Shift"   }, ";", function () awful.client.swap.byidx(1)    end,
               {description = "swap with next client by index", group = "client"}),
 
-    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
+    awful.key({ modkey, "Shift"   }, ",", function () awful.client.swap.byidx(-1)    end,
               {description = "swap with previous client by index", group = "client"}),
 
-    -- Screen navigation
-    awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
-              {description = "focus the next screen", group = "screen"}),
+    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.bydirection("down")    end,
+              {description = "swap with client on the bottom", group = "client"}),
 
-    awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
-              {description = "focus the previous screen", group = "screen"}),
+    awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.bydirection("up")    end,
+              {description = "swap with client on the top", group = "client"}),
+
+    awful.key({ modkey, "Shift"   }, "h", function () awful.client.swap.bydirection("left")    end,
+              {description = "swap with client on the left", group = "client"}),
+
+    awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.bydirection("right")    end,
+              {description = "swap with client on the right", group = "client"}),
+
+    -- Client size
+    awful.key({ modkey,           }, "v", function () awful.client.incwfact(0.05)    end,
+              {description = "increase window factor of a client", group = "client"}),
+
+    awful.key({ modkey, "Shift"   }, "v", function () awful.client.incwfact(-0.05)    end,
+              {description = "decrease window factor of a client", group = "client"}),
 
     -- Client jumps
     awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
@@ -419,11 +426,31 @@ globalkeys = awful.util.table.join(
         end,
         {description = "go back", group = "client"}),
 
+    -- Multimedia keys
+    awful.key({}, "XF86AudioRaiseVolume", apw.Up),
+    awful.key({}, "XF86AudioLowerVolume", apw.Down),
+    awful.key({}, "XF86AudioMute", apw.ToggleMute),
+    awful.key({}, "XF86AudioPlay", function() awful.util.spawn("spotifycli --playpause") end),
+    awful.key({}, "XF86AudioPrev", function() awful.util.spawn("spotifycli --prev") end),
+    awful.key({}, "XF86AudioNext", function() awful.util.spawn("spotifycli --next") end),
+    awful.key({}, "XF86Display",
+      function()
+        awful.util.spawn("~/scripts/setup-screen.sh")
+        awesome.restart()
+      end),
+
+    -- Screen navigation
+    awful.key({ modkey, "Control" }, "'", function () awful.screen.focus_relative( 1) end,
+              {description = "focus the next screen", group = "screen"}),
+
+    awful.key({ modkey, "Control" }, "'", function () awful.screen.focus_relative(-1) end,
+              {description = "focus the previous screen", group = "screen"}),
+
     -- Spawn apps
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
         {description = "open a terminal", group = "launcher"}),
 
-    awful.key({ modkey, "Shift"   }, "Return", function ()
+    awful.key({ modkey, "Mod1"   }, "Return", function ()
         awful.spawn(terminal, {
             floating  = true,
             tag       = awful.screen.focused().selected_tag,
@@ -433,7 +460,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,    }, "t", function () awful.spawn(terminal .. " -e tmux") end,
         {description = "open a tmux terminal", group = "launcher"}),
 
-    awful.key({ modkey, "Shift"   }, "t", function ()
+    awful.key({ modkey, "Mod1"   }, "t", function ()
         awful.spawn(terminal .. " -e tmux", {
             floating  = true,
             tag       = awful.screen.focused().selected_tag,
@@ -448,7 +475,7 @@ globalkeys = awful.util.table.join(
         function () awful.util.spawn("firefox") end,
         {description = "open firefox", group = "launcher"}),
 
-    awful.key({ modkey, "Mod1" }, "l",
+    awful.key({ modkey, "Control" }, "Return",
         function () awful.util.spawn("gnome-screensaver-command -l") end,
         {description = "lock the screen", group = "launcher"}),
 
@@ -491,23 +518,23 @@ globalkeys = awful.util.table.join(
       {description = "poweroff", group = "launcher"}),
 
     -- Master windows manipulation
-    awful.key({ modkey,           }, "m",     function () awful.tag.incmwfact( 0.05)          end,
+    awful.key({ modkey, "Shift"   }, "=",     function () awful.tag.incmwfact( 0.05)          end,
               {description = "increase master width factor", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "m",     function () awful.tag.incmwfact(-0.05)          end,
+    awful.key({ modkey,           }, "-",     function () awful.tag.incmwfact(-0.05)          end,
               {description = "decrease master width factor", group = "layout"}),
 
-    awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+    awful.key({ modkey,          }, "/",     function () awful.tag.incnmaster( 1, nil, true) end,
               {description = "increase the number of master clients", group = "layout"}),
 
-    awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+    awful.key({ modkey, "Shift"  }, "/",     function () awful.tag.incnmaster(-1, nil, true) end,
               {description = "decrease the number of master clients", group = "layout"}),
 
     -- Column windows manipulation
-    awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
+    awful.key({ modkey,           }, "\\",     function () awful.tag.incncol( 1, nil, true)    end,
               {description = "increase the number of columns", group = "layout"}),
 
-    awful.key({ modkey, "Control" }, "l",     function () awful.tag.incncol(-1, nil, true)    end,
+    awful.key({ modkey, "Shift"   }, "\\",     function () awful.tag.incncol(-1, nil, true)    end,
               {description = "decrease the number of columns", group = "layout"}),
 
     -- Layout change
@@ -580,7 +607,7 @@ end
 
 clientkeys = awful.util.table.join(
     -- Windows manipulation
-    awful.key({ modkey, "Shift"}, "c", function(c) c:kill() end,
+    awful.key({ modkey, "Mod1"}, "c", function(c) c:kill() end,
       {description = "kill", group = "client"}),
 
     awful.key({ modkey, "Shift" }, "f",
@@ -595,7 +622,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Shift" }, "s", function(c) c.sticky = not c.sticky end,
       {description = "toggle sticky", group = "client"}),
 
-    awful.key({ modkey, "Control" }, "Return",
+    awful.key({ modkey, "Mod1" }, "Return",
       function (c) c:swap(awful.client.getmaster()) end,
       {description = "move to master", group = "client"}),
 
@@ -624,14 +651,14 @@ clientkeys = awful.util.table.join(
       {description = "toggle fullscreen", group = "client"}),
 
   -- Window moving
-  awful.key({ modkey, }, "Left",
+  awful.key({ modkey, "Mod1" }, "h",
     function (c)
       workarea = awful.screen.focused().workarea
       c.x = workarea.x
     end,
     {description = "move client to far left", group = "client"}),
 
-  awful.key({ modkey, }, "Up",
+  awful.key({ modkey, "Mod1" }, "k",
     function (c)
       g=c:geometry()
       g['y'] = beautiful.get_font_height(beautiful.font) * 1.5
@@ -639,14 +666,14 @@ clientkeys = awful.util.table.join(
     end,
     {description = "move client to the top", group = "client"}),
 
-  awful.key({ modkey, }, "Right",
+  awful.key({ modkey, "Mod1" }, "l",
     function (c)
       workarea = awful.screen.focused().workarea
       c.x = workarea.x + workarea.width - c.width - 2*c.border_width
     end,
     {description = "move client to far right", group = "client"}),
 
-  awful.key({ modkey, }, "Down",
+  awful.key({ modkey, "Mod1" }, "j",
     function (c)
       g=c:geometry()
       local topwibox_height = beautiful.get_font_height(beautiful.font) * 1.5
@@ -660,19 +687,19 @@ clientkeys = awful.util.table.join(
     {description = "move client to the center", group = "client"}),
 
   -- Relative moving
-  awful.key({ modkey, "Control" }, "a",
+  awful.key({ modkey, "Control" }, "h",
     function (c) c:relative_move(-20,0,0,0) end,
     {description = "move client a little bit left", group = "client"}),
 
-  awful.key({ modkey, "Control" }, "d",
+  awful.key({ modkey, "Control" }, "l",
     function (c) c:relative_move(20,0,0,0) end,
     {description = "move client a little bit right", group = "client"}),
 
-  awful.key({ modkey, "Control" }, "s",
+  awful.key({ modkey, "Control" }, "j",
     function (c) c:relative_move(0,20,0,0) end,
     {description = "move client a little bit down", group = "client"}),
 
-  awful.key({ modkey, "Control" }, "w",
+  awful.key({ modkey, "Control" }, "k",
     function (c) c:relative_move(0,-20,0,0) end,
     {description = "move client a little bit up", group = "client"}),
 
@@ -685,19 +712,19 @@ clientkeys = awful.util.table.join(
     function (c) c:relative_move(0,0,-20,-20) end,
     {description = "shrink client in both directions", group = "client"}),
 
-  awful.key({ modkey, "Mod1"   }, "]",
+  awful.key({ modkey, "Mod1"    }, "=",
     function (c) c:relative_move(0,0,0,20) end,
     {description = "increase height of the client", group = "client"}),
 
-  awful.key({ modkey, "Control"   }, "]",
-    function (c) c:relative_move(0,0,20,0) end,
-    {description = "increase width of the client", group = "client"}),
-
-  awful.key({ modkey, "Mod1"   }, "[",
+  awful.key({ modkey, "Mod1"    }, "-",
     function (c) c:relative_move(0,0,0,-20) end,
     {description = "decrease height of the client", group = "client"}),
 
-  awful.key({ modkey, "Control"   }, "[",
+  awful.key({ modkey,           }, ".",
+    function (c) c:relative_move(0,0,20,0) end,
+    {description = "increase width of the client", group = "client"}),
+
+  awful.key({ modkey, "Shift"   }, ".",
     function (c) c:relative_move(0,0,-20,0) end,
     {description = "decrease width of the client", group = "client"}),
 

@@ -115,8 +115,8 @@ apwTimer = gears.timer({
   call_now = true,
   autostart = true,
   callback = apw.Update }) -- seconds
---apwTimer:connect_signal("timeout", apw.Update)
---apwTimer:start()
+apwTimer:connect_signal("timeout", apw.Update)
+apwTimer:start()
 
 hints.init()
 
@@ -394,6 +394,7 @@ globalkeys = awful.util.table.join(
         function () awful.client.cycle(true) end,
         {description = "focus prev client (cycle counter clockwise)", group = "client"}),
 
+
     -- Client swapping
     awful.key({ modkey, "Shift"   }, ";", function () awful.client.swap.byidx(1)    end,
               {description = "swap with next client by index", group = "client"}),
@@ -437,9 +438,10 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioRaiseVolume", apw.Up),
     awful.key({}, "XF86AudioLowerVolume", apw.Down),
     awful.key({}, "XF86AudioMute", apw.ToggleMute),
-    awful.key({}, "XF86AudioPlay", function() awful.spawn("spotifycli --playpause") end),
-    awful.key({}, "XF86AudioPrev", function() awful.spawn("spotifycli --prev") end),
-    awful.key({}, "XF86AudioNext", function() awful.spawn("spotifycli --next") end),
+    awful.key({}, "XF86AudioPlay", function() awful.util.spawn("playerctl play-pause") end),
+    awful.key({}, "XF86AudioStop", function() awful.util.spawn("playerctl stop") end),
+    awful.key({}, "XF86AudioPrev", function() awful.util.spawn("playerctl previous") end),
+    awful.key({}, "XF86AudioNext", function() awful.util.spawn("playerctl next") end),
     awful.key({}, "XF86Display", reload_screen),
 
     -- Screen navigation
@@ -478,8 +480,8 @@ globalkeys = awful.util.table.join(
         function () awful.spawn("firefox") end,
         {description = "open firefox", group = "launcher"}),
 
-    awful.key({ modkey, "Mod1" }, "Return",
-        function () awful.spawn("gnome-screensaver-command -l") end,
+    awful.key({ modkey, "Mod1" }, "l",
+        function () awful.util.spawn("slock") end,
         {description = "lock the screen", group = "launcher"}),
 
     awful.key({ modkey, "Mod1" }, "f",
@@ -909,3 +911,10 @@ client.connect_signal("property::name", spotify_rule_workaround)
 
 -- Autostart programs
 awful.spawn.with_shell("~/scripts/autorun.sh")
+local pgrep = io.popen("pgrep tmux")
+local pid = pgrep:read("*line")
+if not pid then
+  awful.spawn(terminal .. " -e tmux" , { tag = awful.screen.focused().tags[1] })
+end
+
+

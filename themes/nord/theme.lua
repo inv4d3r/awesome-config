@@ -55,7 +55,7 @@ theme.purple    = "#B48EAD"
 
 -- {{ Default Colors
 theme.bg_normal = theme.nearblack
-theme.bg_focus = theme.darkgray
+theme.bg_focus = theme.blue_dark
 theme.bg_urgent = theme.orange
 theme.bg_minimize = theme.gray
 theme.bg_systray = theme.nearblack

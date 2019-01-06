@@ -29,7 +29,9 @@ theme.tasklist_maximized_vertical = "v/"
 theme.tasklist_maximized = "M/"
 theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
+theme.tasklist_font = "Hack Bold 9"
 theme.tasklist_plain_task_name = false
+
 theme.useless_gap = 2
 theme.gap_single_client = false
 -- }}
@@ -66,13 +68,13 @@ theme.gray = theme.mediumgravel
 -- }}
 
 -- {{ Default Colors
-theme.bg_normal = theme.blackgravel
+theme.bg_normal = theme.darkgravel
 theme.bg_focus = theme.black
 theme.bg_urgent = theme.orange
 theme.bg_minimize = theme.darkgravel
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = theme.white
+theme.fg_normal = theme.gravel
 theme.fg_focus = theme.white
 theme.fg_urgent = theme.white
 theme.fg_minimize = theme.mediumgravel
@@ -109,8 +111,8 @@ theme.apw_text_weight = 'bold'
 -- }}
 
 -- {{ Battery
-theme.bat_charging = theme.fg_normal
-theme.bat_not_charging = theme.yellow
+theme.bat_charging = theme.yellow
+theme.bat_not_charging = theme.fg_normal
 theme.bat_low = theme.red
 theme.bat_medium = theme.blue
 theme.bat_high = theme.green

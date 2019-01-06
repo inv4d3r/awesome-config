@@ -29,7 +29,9 @@ theme.tasklist_maximized_vertical = "v/"
 theme.tasklist_maximized = "M/"
 theme.tasklist_disable_icon = true
 theme.tasklist_align = "center"
+theme.tasklist_font = "Hack Bold 9"
 theme.tasklist_plain_task_name = false
+
 theme.useless_gap = 2
 theme.gap_single_client = false
 -- }}
@@ -79,8 +81,8 @@ theme.apw_text_color = theme.aqua
 theme.apw_text_weight = "bold"
 
 -- {{ Battery
-theme.bat_charging = theme.fg_normal
-theme.bat_not_charging = theme.yellow
+theme.bat_charging = theme.yellow
+theme.bat_not_charging = theme.fg_normal
 theme.bat_low = theme.red
 theme.bat_medium = theme.blue
 theme.bat_high = theme.green

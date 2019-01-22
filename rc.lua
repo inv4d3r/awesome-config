@@ -105,6 +105,7 @@ local theme_name = os.getenv("THEME") or "default"
 if theme_name == "" then
   theme_name = "default"
 end
+
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(themes_dir .. theme_name .. "/theme.lua")
 
@@ -221,7 +222,7 @@ awful.screen.connect_for_each_screen(function(s)
                colorify{ text = args[2] .. "% ",
                          fgcolor = charge_color }
       end, 60, "BAT1")
-    battery_widget_bg = wibox.container.background(battery_widget, beautiful.fs_bg_color)
+    battery_widget_bg = wibox.container.background(battery_widget, beautiful.bat_bg_color)
 
     homefs_widget = wibox.widget.textbox()
     vicious.register(homefs_widget, vicious.widgets.fs,

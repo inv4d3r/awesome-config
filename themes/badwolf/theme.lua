@@ -85,7 +85,7 @@ theme.hfill_bg_color = theme.blackestgravel
 
 -- {{ Textclock
 theme.clock_bg_color = theme.blackgravel
-theme.date_fg_color = theme.white
+theme.date_fg_color = theme.blue
 theme.time_fg_color = theme.red
 -- }}
 
@@ -93,7 +93,7 @@ theme.time_fg_color = theme.red
 theme.nonet_fg_color = theme.red
 theme.netface_fg_color = theme.other_brown
 theme.netrate_fg_color = theme.dirty_yellow
-theme.net_bg_color = theme.darkgravel
+theme.net_bg_color = theme.blackgravel
 -- }}
 
 -- {{ Fs widgets
@@ -111,6 +111,7 @@ theme.apw_text_weight = 'bold'
 -- }}
 
 -- {{ Battery
+theme.bat_bg = theme.blackgravel
 theme.bat_charging = theme.yellow
 theme.bat_not_charging = theme.fg_normal
 theme.bat_low = theme.red

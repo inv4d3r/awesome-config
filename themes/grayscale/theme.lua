@@ -13,8 +13,9 @@ theme = {}
 -- }}
 
 -- {{ Exportable variables
-theme.font = "Hack 8"
+theme.font = "Hack 9"
 theme.wallpaper = theme_dir .. "background.jpg"
+--theme.wallpaper = theme_dir .. "choice.jpg"
 theme.awesome_icon = theme_dir .. "awesome_icon.png"
 -- }}
 
@@ -49,16 +50,22 @@ theme.blackestgravel = "#141413"
 
 -- {{ Default Colors
 theme.bg_normal = theme.darkgravel
-theme.bg_focus = theme.blackestgravel
-theme.bg_urgent = theme.gravel
+theme.bg_focus = theme.gravel
+theme.bg_urgent = theme.brightgravel
 theme.bg_minimize = theme.darkgravel
 theme.bg_systray = theme.bg_normal
 
-theme.fg_normal = theme.gravel
-theme.fg_focus = theme.brightgravel
-theme.fg_urgent = theme.blackgravel
+theme.fg_normal = theme.lightgravel
+theme.fg_focus = theme.blackestgravel
+theme.fg_urgent = theme.blackestgravel
 theme.fg_minimize = theme.mediumgravel
 -- }}
+
+-- {{ tasklist
+theme.tasklist_shape_border_color = "#ffffff"
+theme.tasklist_shape_border_width = 2
+-- }}
+
 
 -- Horizontal fill color
 theme.hfill_bg_color = theme.blackestgravel

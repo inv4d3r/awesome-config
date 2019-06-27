@@ -919,10 +919,40 @@ end
 client.connect_signal("property::name", spotify_rule_workaround)
 -- }}}
 
--- Autostart programs
-awful.spawn.with_shell("~/scripts/autorun.sh")
+function spawn_once(command, class, tag)
+  -- create move callback
+  local callback
+  callback = function(c)
+    if c.class == class then
+      awful.client.movetotag(tag, c)
+      client.disconnect_signal("manage", callback)
+    end
+  end
+  client.connect_signal("manage", callback)
+  -- now check if not already running!
+  local findme = command
+  local firstspace = findme:find(" ")
+  if firstspace then
+    findme = findme:sub(0, firstspace-1)
+  end
+  -- finally run it
+  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. command .. ")")
+end
+
+-- use the spawn_once
+--spawn_once("evolution", "Evolution", awful.screen.focused().tags[1])
+spawn_once("pidgin", "Pidgin", awful.screen.focused().tags[1])
+spawn_once("megasync", "megasync", awful.screen.focused().tags[1])
+spawn_once("qutebrowser", "qutebrowser", awful.screen.focused().tags[2])
+spawn_once("firefox", "Firefox", awful.screen.focused().tags[2])
+spawn_once("spotify", "Spotify", awful.screen.focused().tags[9])
+-- }}}
+
 local pgrep = io.popen("pgrep tmux")
 local pid = pgrep:read("*line")
 if not pid then
-  awful.spawn(terminal .. " -e tmux" , { tag = awful.screen.focused().tags[1] })
+  awful.spawn(terminal .. " -e tmux" , { tag = awful.screen.focused().tags[3] })
+  --awful.spawn(terminal, { tag = awful.screen.focused().tags[4] })
+  --awful.spawn(terminal, { tag = awful.screen.focused().tags[5] })
+  --awful.spawn(terminal, { tag = awful.screen.focused().tags[6] })
 end

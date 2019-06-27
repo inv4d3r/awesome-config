@@ -121,7 +121,7 @@ apwTimer:start()
 hints.init()
 
 -- This is used later as the default terminal and editor to run.
-terminal = "termite"
+terminal = os.getenv("TERMINAL") or "kitty"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -358,7 +358,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "]",  awful.tag.viewnext,
               {description = "view next", group = "tag"}),
 
-    -- Client vim-like navigation
+    -- Client navigation
     awful.key({ modkey,           }, ";",
         function () awful.client.focus.byidx(1) end,
         {description = "focus next client by index", group = "client"}),
@@ -443,6 +443,8 @@ globalkeys = awful.util.table.join(
     awful.key({}, "XF86AudioPrev", function() awful.util.spawn("playerctl previous") end),
     awful.key({}, "XF86AudioNext", function() awful.util.spawn("playerctl next") end),
     awful.key({}, "XF86Display", reload_screen),
+    awful.key({}, "Print", function() awful.spawn("shutter -s") end),
+    --awful.key({}, "Print", function() awful.spawn("scrot -s") end),
 
     -- Screen navigation
     awful.key({ modkey,           }, "'", function () awful.screen.focus_relative( 1) end,
@@ -567,6 +569,14 @@ globalkeys = awful.util.table.join(
 for i = 1, 9 do
     globalkeys = awful.util.table.join(globalkeys,
         -- View tag only.
+        awful.key({ modkey, "Mod1" }, "#" .. i + 9,
+                  function () awful.client.focus.byidx(i) end,
+                  {description = "focus next client by index", group = "client"}),
+
+        awful.key({ modkey, "Mod1", "Shift" }, "#" .. i + 9,
+                  function () awful.client.focus.byidx(-1*i) end,
+                  {description = "focus previous client by index", group = "client"}),
+
         awful.key({ modkey }, "#" .. i + 9,
                   function ()
                         local screen = awful.screen.focused()
@@ -816,7 +826,7 @@ awful.rules.rules = {
     {
       rule_any = { class = { "firefox", "Firefox", "qutebrowser" } },
       except = { type = "dialog" },
-      properties = { tag = awful.screen.focused().tags[2], floating = true, maximized = true }
+      properties = { floating = true, maximized = true }
     },
 
     {
@@ -831,7 +841,7 @@ awful.rules.rules = {
 
     {
       rule = { class = "Boostnote" },
-      properties = { tag = awful.screen.focused().tags[3], floating = true, maximized = true }
+      properties = { floating = true, maximized = true }
     },
 
     {
@@ -916,5 +926,3 @@ local pid = pgrep:read("*line")
 if not pid then
   awful.spawn(terminal .. " -e tmux" , { tag = awful.screen.focused().tags[1] })
 end
-
-

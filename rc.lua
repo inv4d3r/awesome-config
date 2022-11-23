@@ -824,9 +824,9 @@ awful.rules.rules = {
     },
 
     {
-      rule_any = { class = { "firefox", "Firefox", "qutebrowser" } },
+      rule_any = { class = { "firefox", "Firefox", "qutebrowser", "lutris", "Lutris", "Steam" } },
       except = { type = "dialog" },
-      properties = { floating = true, maximized = true }
+      properties = { floating = true }
     },
 
     {

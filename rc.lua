@@ -482,7 +482,7 @@ globalkeys = awful.util.table.join(
         function () awful.spawn("firefox") end,
         {description = "open firefox", group = "launcher"}),
 
-    awful.key({ modkey, "Mod1" }, "l",
+    awful.key({ modkey, "Mod1" }, "Return",
         function () awful.util.spawn("slock") end,
         {description = "lock the screen", group = "launcher"}),
 
